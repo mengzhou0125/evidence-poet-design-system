@@ -25,7 +25,8 @@ The two files in `reference/` are **byte-identical mirrors** of the canonical sp
 | Mirror here | Canonical upstream |
 |---|---|
 | `reference/design.md` | `../portfolio/style/design.md` — DNA1 token source (§0 JSON) + visual/type/component/motion rules + guardrails |
-| `reference/react-bindings.md` | `../portfolio/style/react-bindings.md` — React/CSS-var mapping (only relevant if a skill mode emits React code) |
+
+(Previously `reference/react-bindings.md` mirrored `../portfolio/style/react-bindings.md` here, but it was removed: it referenced portfolio-internal file paths that have no meaning outside that workspace, so it was inappropriate for a public, framework-agnostic skill. If you need React implementation guidance in the portfolio repo, read it directly from `../portfolio/style/react-bindings.md` — not from this skill.)
 
 **Rules**:
 - Treat `reference/` as **read-only**. Never edit it directly to change DNA1.
@@ -41,8 +42,7 @@ design_skills/
 ├── CLAUDE.md                              this file · authoring/maintenance notes
 ├── SKILL.md                               skill definition (YAML frontmatter + installer instructions)
 ├── reference/
-│   ├── design.md                          canonical DNA1 spec mirror · COPIED to target on install
-│   └── react-bindings.md                  React mapping · NOT copied · consulted on demand
+│   └── design.md                          canonical DNA1 spec mirror · COPIED to target on install
 └── templates/
     └── claude_md_directive.md             the section injected into target project's CLAUDE.md
 ```

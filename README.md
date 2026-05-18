@@ -56,7 +56,6 @@ After install, the project is self-sufficient. The skill itself does not need to
 |---|---|
 | `~/.claude/skills/evidence-poet-design-system/SKILL.md` | Skill definition (Claude reads this to decide when to trigger) |
 | `~/.claude/skills/evidence-poet-design-system/reference/design.md` | Canonical DNA1 spec — the master copy |
-| `~/.claude/skills/evidence-poet-design-system/reference/react-bindings.md` | React/CSS-variable mapping (consulted on demand) |
 | `~/.claude/skills/evidence-poet-design-system/templates/claude_md_directive.md` | The directive section injected into target projects' `CLAUDE.md` |
 
 When the skill runs in a target project, it writes:
@@ -118,8 +117,7 @@ Full ruleset: [`reference/design.md`](reference/design.md) (§9 guardrails).
 evidence-poet-design-system/
 ├── SKILL.md                              skill definition (YAML frontmatter + installer instructions)
 ├── reference/
-│   ├── design.md                         canonical spec — copied to target projects
-│   └── react-bindings.md                 React mapping — consulted on demand
+│   └── design.md                         canonical spec — copied to target projects
 ├── templates/
 │   └── claude_md_directive.md            the directive injected into target CLAUDE.md
 ├── install.sh / install.ps1              installers

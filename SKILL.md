@@ -68,7 +68,6 @@ Copy the skill's `reference/design.md` to `<project>/.claude/design.md`:
 - If `<project>/.claude/` does not exist, create it.
 - Source path: this skill's own `reference/design.md` (resolves to `<skill-dir>/reference/design.md` — when deployed, `~/.claude/skills/evidence-poet-design-system/reference/design.md`; during authoring, `design_skills/reference/design.md`).
 - Do not modify the content during copy — it must be byte-identical to the canonical source.
-- Do not copy `react-bindings.md`. It is React-specific and most target projects do not need it. If the user later asks for React-specific guidance, point them to the skill's `reference/react-bindings.md` directly.
 
 ### Step 4 · Register the directive in CLAUDE.md
 
@@ -133,6 +132,5 @@ Strictly file-level: copy one spec, register one directive. That is all.
 The canonical DNA1 spec lives in this skill's `reference/` folder:
 
 - `reference/design.md` — framework-agnostic spec (tokens · color · type · components · motion · guardrails). This is what gets copied to target projects.
-- `reference/react-bindings.md` — React/CSS-variable implementation mapping. Not copied during install; consult when target project is React-based and a session asks React-specific questions.
 
-Upstream canonical source for DNA1 (do not edit during install): `portfolio/style/design.md` in the workspace. The skill's `reference/` is a byte-identical mirror; drift is forbidden.
+The spec is framework-agnostic. Component patterns in §4 are normative (e.g., Project Card / Sticky-Scroll / Caption / Before-After Slider) and apply to any frontend stack — React, Vue, vanilla HTML/CSS.
