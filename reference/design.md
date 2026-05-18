@@ -17,7 +17,7 @@
 
 ```json
 {
-  "version": "2026-05-17",
+  "version": "1.0.0",
   "color": {
     "warmPaper": "#F8F7F3",
     "inkBlack": "#1A1A18",
@@ -54,7 +54,12 @@
 
 The human-readable tables in §2 / §3 / §5 / §6 derive from this block. JSON is canonical when in conflict.
 
-**Versioning**: the `version` field uses ISO-date format (`YYYY-MM-DD`) and **must be bumped on every meaningful change** to this spec. Downstream consumers (the `evidence-poet-design-system` skill, projects with `.claude/design.md`) compare this field to detect drift and auto-update.
+**Versioning**: the `version` field uses semantic versioning (`MAJOR.MINOR.PATCH`, e.g. `1.0.0` → `1.0.1` → `1.1.0` → `2.0.0`) and **must be bumped on every meaningful change** to this spec. Downstream consumers (the `evidence-poet-design-system` skill, projects with `.claude/design.md`) compare this field to detect drift and auto-update.
+
+Bump policy:
+- **PATCH** (`1.0.0` → `1.0.1`) — typo fix · clarification · no token or rule change
+- **MINOR** (`1.0.1` → `1.1.0`) — add a new token / pattern / guardrail · existing values unchanged
+- **MAJOR** (`1.1.0` → `2.0.0`) — change or remove existing tokens / rules · breaking for downstream consumers
 
 ---
 

@@ -46,12 +46,25 @@ function Get-DesignVersion {
     return $null
 }
 
+# Returns -1 if A<B · 0 if A==B · 1 if A>B · $null if either is not a parseable semver (X.Y.Z)
+function Compare-Semver {
+    param([string]$A, [string]$B)
+    $pattern = '^\d+\.\d+\.\d+$'
+    if (-not ($A -match $pattern) -or -not ($B -match $pattern)) { return $null }
+    $va = [System.Version]"$A"
+    $vb = [System.Version]"$B"
+    if ($va -lt $vb) { return -1 }
+    if ($va -gt $vb) { return 1 }
+    return 0
+}
+
 $SourceVersion = Get-DesignVersion (Join-Path $Source 'reference\design.md')
 
 if (Test-Path $Target) {
     $TargetVersion = Get-DesignVersion (Join-Path $Target 'reference\design.md')
+    $cmp = Compare-Semver $SourceVersion $TargetVersion
 
-    if (-not $SourceVersion -or -not $TargetVersion) {
+    if ($null -eq $cmp) {
         Write-Host "Skill already installed at: $Target (cannot determine version)"
         $yn = Read-Host "Overwrite with latest? [y/N]"
         if ($yn -notmatch '^[Yy]') {
@@ -61,12 +74,12 @@ if (Test-Path $Target) {
         }
         Remove-Item -Recurse -Force $Target
     }
-    elseif ($SourceVersion -eq $TargetVersion) {
+    elseif ($cmp -eq 0) {
         Write-Host "✓ Skill already at v$TargetVersion · no update needed."
         if ($Cleanup) { Remove-Item -Recurse -Force $Cleanup }
         exit 0
     }
-    elseif ([string]::Compare($SourceVersion, $TargetVersion) -gt 0) {
+    elseif ($cmp -gt 0) {
         Write-Host "→ Updating skill: v$TargetVersion → v$SourceVersion"
         Remove-Item -Recurse -Force $Target
     }

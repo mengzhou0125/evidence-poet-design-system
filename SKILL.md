@@ -50,14 +50,14 @@ Look for `.claude/design.md` in the project root.
 
 1. Parse the `version` field from the §0 JSON block of the **skill's** `reference/design.md` (the source). Find the JSON code block immediately following the `## 0. Token Source` heading and extract `"version": "..."`.
 2. Parse the `version` field from the §0 JSON block of the **project's** `.claude/design.md` (the existing copy). Same extraction logic.
-3. Compare as ISO date strings (lexicographic comparison works since format is `YYYY-MM-DD`):
+3. Compare as **semantic versions** (`MAJOR.MINOR.PATCH`). Compare numerically component-by-component — do NOT use lexicographic string comparison (`1.10.0` is greater than `1.9.0`, but as strings `"1.10.0" < "1.9.0"`). Split on `.`, parse each part as an integer, compare left-to-right.
 
    | Comparison | Action |
    |---|---|
    | `skill_version > project_version` | **Auto-update.** Silently overwrite Step 3 + refresh Step 4. Report: "DNA1 updated: v<project_version> → v<skill_version>" |
    | `skill_version == project_version` | **No-op.** Skip Step 3 and Step 4. Report: "DNA1 already at v<version> · no update needed" |
    | `skill_version < project_version` | **Warn and ask.** Project has a newer version than the skill (locally modified or skill is stale). Tell the user: "Project has v<project_version>, skill has v<skill_version>. Overwriting will lose local changes. Continue? (yes/no)". Only proceed if yes. |
-   | Either version missing | **Treat as drift.** Ask the user: "Cannot determine version (missing `version` field in one or both files). Overwrite with skill copy? (yes/no)". This handles legacy installs done before versioning existed. |
+   | Either version missing or unparseable | **Treat as drift.** Ask the user: "Cannot determine version (missing or invalid `version` field). Overwrite with skill copy? (yes/no)". This handles legacy installs done before versioning existed. |
 
 Never prompt for confirmation in the `skill > project` case — that is the common "user updated the skill, now wants projects synced" path and should be frictionless.
 

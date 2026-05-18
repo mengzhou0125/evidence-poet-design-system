@@ -42,11 +42,11 @@ Cheat sheet is for orientation only — for any actual implementation, read `.cl
 
 ### Versioning & auto-update
 
-The DNA1 spec carries a `version` field (ISO date, format `YYYY-MM-DD`) in its §0 JSON block. When doing **any frontend work**, Claude should:
+The DNA1 spec carries a `version` field (semantic versioning, `MAJOR.MINOR.PATCH`, e.g. `1.0.0`) in its §0 JSON block. When doing **any frontend work**, Claude should:
 
 1. Read the `version` field from this project's [`.claude/design.md`](.claude/design.md).
 2. If the global skill is installed (`~/.claude/skills/evidence-poet-design-system/reference/design.md` exists), read its `version` field too.
-3. If the skill's version is **newer**, tell the user once per session: "DNA1 spec has a newer version available (v<old> → v<new>). Run the `evidence-poet-design-system` skill to update." Then continue with the current (older) project version.
+3. Compare the two versions **numerically component-by-component** (not lexicographically — `1.10.0` is newer than `1.9.0`). If the skill's version is **newer**, tell the user once per session: "DNA1 spec has a newer version available (v<old> → v<new>). Run the `evidence-poet-design-system` skill to update." Then continue with the current (older) project version.
 4. If versions match, or skill not installed, proceed silently.
 
 This check is best-effort — if either file can't be read, skip the check and use the project's `.claude/design.md` as-is.
