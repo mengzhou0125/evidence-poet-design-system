@@ -37,16 +37,49 @@ if ($ScriptDir -and (Test-Path (Join-Path $ScriptDir 'SKILL.md'))) {
     $Cleanup = $TmpDir
 }
 
-# --- Idempotency check ---
+# --- Version comparison · silent update if newer ---
+function Get-DesignVersion {
+    param([string]$Path)
+    if (-not (Test-Path $Path)) { return $null }
+    $line = Select-String -Path $Path -Pattern '^\s*"version"\s*:\s*"([^"]+)"' -List
+    if ($line) { return $line.Matches[0].Groups[1].Value }
+    return $null
+}
+
+$SourceVersion = Get-DesignVersion (Join-Path $Source 'reference\design.md')
+
 if (Test-Path $Target) {
-    Write-Host "Skill already installed at: $Target"
-    $yn = Read-Host "Overwrite with latest? [y/N]"
-    if ($yn -notmatch '^[Yy]') {
-        Write-Host "Aborted. No changes made."
+    $TargetVersion = Get-DesignVersion (Join-Path $Target 'reference\design.md')
+
+    if (-not $SourceVersion -or -not $TargetVersion) {
+        Write-Host "Skill already installed at: $Target (cannot determine version)"
+        $yn = Read-Host "Overwrite with latest? [y/N]"
+        if ($yn -notmatch '^[Yy]') {
+            Write-Host "Aborted. No changes made."
+            if ($Cleanup) { Remove-Item -Recurse -Force $Cleanup }
+            exit 0
+        }
+        Remove-Item -Recurse -Force $Target
+    }
+    elseif ($SourceVersion -eq $TargetVersion) {
+        Write-Host "✓ Skill already at v$TargetVersion · no update needed."
         if ($Cleanup) { Remove-Item -Recurse -Force $Cleanup }
         exit 0
     }
-    Remove-Item -Recurse -Force $Target
+    elseif ([string]::Compare($SourceVersion, $TargetVersion) -gt 0) {
+        Write-Host "→ Updating skill: v$TargetVersion → v$SourceVersion"
+        Remove-Item -Recurse -Force $Target
+    }
+    else {
+        Write-Host "⚠ Local skill (v$TargetVersion) is newer than source (v$SourceVersion)."
+        $yn = Read-Host "Downgrade? [y/N]"
+        if ($yn -notmatch '^[Yy]') {
+            Write-Host "Aborted. No changes made."
+            if ($Cleanup) { Remove-Item -Recurse -Force $Cleanup }
+            exit 0
+        }
+        Remove-Item -Recurse -Force $Target
+    }
 }
 
 # --- Install ---
@@ -63,7 +96,7 @@ if ($Cleanup) { Remove-Item -Recurse -Force $Cleanup }
 
 # --- Done ---
 Write-Host ""
-Write-Host "✓ Installed: $Target"
+Write-Host "✓ Installed: $Target (v$SourceVersion)"
 Write-Host ""
 Write-Host "Next: in any frontend project, tell Claude Code one of:"
 Write-Host "    install DNA1 into this project"

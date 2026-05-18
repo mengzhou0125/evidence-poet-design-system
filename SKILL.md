@@ -40,14 +40,26 @@ Check the current working directory for at least one of:
 
 If none exist, stop and ask the user to confirm the target directory before proceeding.
 
-### Step 2 · Check for existing install (idempotency)
+### Step 2 · Check existing install · compare versions
 
-Look for `.claude/design.md` in the project root. If it exists:
-- Tell the user: "DNA1 is already installed at `.claude/design.md`. Overwrite with the latest spec from the skill? (yes/no)"
-- If yes → continue to Step 3 (overwrite mode)
-- If no → stop, report no changes made
+Look for `.claude/design.md` in the project root.
 
-Also look for the DNA1 directive block in the project's `CLAUDE.md` (delimited by `<!-- DNA1-DIRECTIVE-START -->` / `<!-- DNA1-DIRECTIVE-END -->`). If found and the user declined Step 2 overwrite, also skip Step 4.
+**If it does not exist** → fresh install. Proceed to Step 3 (first-time install path, will report "Installed v<X>").
+
+**If it exists** → compare versions:
+
+1. Parse the `version` field from the §0 JSON block of the **skill's** `reference/design.md` (the source). Find the JSON code block immediately following the `## 0. Token Source` heading and extract `"version": "..."`.
+2. Parse the `version` field from the §0 JSON block of the **project's** `.claude/design.md` (the existing copy). Same extraction logic.
+3. Compare as ISO date strings (lexicographic comparison works since format is `YYYY-MM-DD`):
+
+   | Comparison | Action |
+   |---|---|
+   | `skill_version > project_version` | **Auto-update.** Silently overwrite Step 3 + refresh Step 4. Report: "DNA1 updated: v<project_version> → v<skill_version>" |
+   | `skill_version == project_version` | **No-op.** Skip Step 3 and Step 4. Report: "DNA1 already at v<version> · no update needed" |
+   | `skill_version < project_version` | **Warn and ask.** Project has a newer version than the skill (locally modified or skill is stale). Tell the user: "Project has v<project_version>, skill has v<skill_version>. Overwriting will lose local changes. Continue? (yes/no)". Only proceed if yes. |
+   | Either version missing | **Treat as drift.** Ask the user: "Cannot determine version (missing `version` field in one or both files). Overwrite with skill copy? (yes/no)". This handles legacy installs done before versioning existed. |
+
+Never prompt for confirmation in the `skill > project` case — that is the common "user updated the skill, now wants projects synced" path and should be frictionless.
 
 ### Step 3 · Copy the canonical design spec
 
@@ -72,18 +84,34 @@ The directive template is in `templates/claude_md_directive.md` in this skill fo
 
 ### Step 5 · Report
 
-Tell the user, in one short message:
+Tell the user, in one short message. Pick the message based on what happened in Step 2:
 
+**Fresh install**:
 ```
-✓ DNA1 design system installed.
+✓ DNA1 design system installed (v<version>).
   - Spec:      .claude/design.md
   - Directive: CLAUDE.md (DNA1-DIRECTIVE section)
 
-Future Claude sessions in this project will automatically follow DNA1 for all
-frontend work. Re-run this skill anytime to update to the latest spec.
+Future Claude sessions in this project will automatically follow DNA1.
 ```
 
-Do not summarize what DNA1 is. Do not explain the guardrails. Installation is silent — the directive itself carries the rules.
+**Updated (skill > project)**:
+```
+✓ DNA1 updated: v<old> → v<new>
+  - .claude/design.md and CLAUDE.md directive refreshed.
+```
+
+**No-op (equal versions)**:
+```
+✓ DNA1 already at v<version> · no update needed.
+```
+
+**Overwrite after warn (skill < project, user confirmed)**:
+```
+⚠ Overwrote project copy v<project> with skill v<skill>. Local changes lost.
+```
+
+Do not summarize what DNA1 is. Do not explain the guardrails. Installation/update is silent — the directive itself carries the rules.
 
 ---
 

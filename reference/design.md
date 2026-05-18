@@ -17,6 +17,7 @@
 
 ```json
 {
+  "version": "2026-05-17",
   "color": {
     "warmPaper": "#F8F7F3",
     "inkBlack": "#1A1A18",
@@ -52,6 +53,8 @@
 ```
 
 The human-readable tables in §2 / §3 / §5 / §6 derive from this block. JSON is canonical when in conflict.
+
+**Versioning**: the `version` field uses ISO-date format (`YYYY-MM-DD`) and **must be bumped on every meaningful change** to this spec. Downstream consumers (the `evidence-poet-design-system` skill, projects with `.claude/design.md`) compare this field to detect drift and auto-update.
 
 ---
 

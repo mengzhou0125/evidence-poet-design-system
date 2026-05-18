@@ -40,7 +40,18 @@ Shadow:        hover/active only · 0 2px 12px rgba(0,0,0,0.06)
 
 Cheat sheet is for orientation only — for any actual implementation, read `.claude/design.md` directly.
 
-### Updating
+### Versioning & auto-update
 
-Re-run the `evidence-poet-design-system` skill to refresh `.claude/design.md` and this directive to the latest spec. The skill is idempotent — it asks before overwriting.
+The DNA1 spec carries a `version` field (ISO date, format `YYYY-MM-DD`) in its §0 JSON block. When doing **any frontend work**, Claude should:
+
+1. Read the `version` field from this project's [`.claude/design.md`](.claude/design.md).
+2. If the global skill is installed (`~/.claude/skills/evidence-poet-design-system/reference/design.md` exists), read its `version` field too.
+3. If the skill's version is **newer**, tell the user once per session: "DNA1 spec has a newer version available (v<old> → v<new>). Run the `evidence-poet-design-system` skill to update." Then continue with the current (older) project version.
+4. If versions match, or skill not installed, proceed silently.
+
+This check is best-effort — if either file can't be read, skip the check and use the project's `.claude/design.md` as-is.
+
+### Manual refresh
+
+To force-refresh this project's spec to the latest skill version: tell Claude `install DNA1 into this project` (or `/install-dna1`). The skill compares versions and updates silently if newer.
 <!-- DNA1-DIRECTIVE-END -->

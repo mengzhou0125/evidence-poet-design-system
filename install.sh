@@ -38,15 +38,43 @@ else
   CLEANUP_DIR="$TMPDIR"
 fi
 
-# --- Idempotency check ---
+# --- Version comparison · silent update if newer ---
+extract_version() {
+  # Extracts "version": "YYYY-MM-DD" from a design.md JSON block. Empty if missing.
+  grep -E '^\s*"version"\s*:' "$1" 2>/dev/null | head -1 | sed -E 's/.*"version"\s*:\s*"([^"]+)".*/\1/'
+}
+
+SOURCE_VERSION="$(extract_version "$SOURCE/reference/design.md")"
+
 if [ -d "$TARGET" ]; then
-  echo "Skill already installed at: $TARGET"
-  printf "Overwrite with latest? [y/N] "
-  read -r yn </dev/tty || yn="n"
-  case "$yn" in
-    [Yy]*) rm -rf "$TARGET" ;;
-    *) echo "Aborted. No changes made."; [ -n "$CLEANUP_DIR" ] && rm -rf "$CLEANUP_DIR"; exit 0 ;;
-  esac
+  TARGET_VERSION="$(extract_version "$TARGET/reference/design.md")"
+
+  if [ -z "$SOURCE_VERSION" ] || [ -z "$TARGET_VERSION" ]; then
+    # Legacy install without version field — ask.
+    echo "Skill already installed at: $TARGET (cannot determine version)"
+    printf "Overwrite with latest? [y/N] "
+    read -r yn </dev/tty || yn="n"
+    case "$yn" in
+      [Yy]*) rm -rf "$TARGET" ;;
+      *) echo "Aborted. No changes made."; [ -n "$CLEANUP_DIR" ] && rm -rf "$CLEANUP_DIR"; exit 0 ;;
+    esac
+  elif [ "$SOURCE_VERSION" = "$TARGET_VERSION" ]; then
+    echo "✓ Skill already at v$TARGET_VERSION · no update needed."
+    [ -n "$CLEANUP_DIR" ] && rm -rf "$CLEANUP_DIR"
+    exit 0
+  elif [ "$SOURCE_VERSION" \> "$TARGET_VERSION" ]; then
+    echo "→ Updating skill: v$TARGET_VERSION → v$SOURCE_VERSION"
+    rm -rf "$TARGET"
+  else
+    # Source is OLDER than target — local has newer copy. Warn.
+    echo "⚠ Local skill (v$TARGET_VERSION) is newer than source (v$SOURCE_VERSION)."
+    printf "Downgrade? [y/N] "
+    read -r yn </dev/tty || yn="n"
+    case "$yn" in
+      [Yy]*) rm -rf "$TARGET" ;;
+      *) echo "Aborted. No changes made."; [ -n "$CLEANUP_DIR" ] && rm -rf "$CLEANUP_DIR"; exit 0 ;;
+    esac
+  fi
 fi
 
 # --- Install ---
@@ -64,7 +92,7 @@ cp -r "$SOURCE/templates"       "$TARGET/templates"
 
 # --- Done ---
 echo ""
-echo "✓ Installed: $TARGET"
+echo "✓ Installed: $TARGET (v$SOURCE_VERSION)"
 echo ""
 echo "Next: in any frontend project, tell Claude Code one of:"
 echo "    install DNA1 into this project"

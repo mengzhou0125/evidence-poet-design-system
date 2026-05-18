@@ -70,15 +70,21 @@ When the skill runs in a target project, it writes:
 
 ## Update
 
+The DNA1 spec is versioned (see `version` field in [`reference/design.md`](reference/design.md) §0 JSON, ISO date format). The installer and the in-project skill both compare versions and **update silently when the source is newer** — no prompts unless something unusual happens (downgrade attempt, missing version field).
+
 ```bash
-# pull the latest, then re-install
-cd /path/to/your/clone
-git pull
-./install.sh
-# OR re-run the one-liner
+# refresh the global skill install
+curl -fsSL https://raw.githubusercontent.com/mengzhou0125/evidence-poet-design-system/main/install.sh | bash
+# → "✓ Skill already at v2026-05-17 · no update needed."  (or)
+# → "→ Updating skill: v2026-05-17 → v2026-06-01"
+
+# refresh a project's local copy of the spec
+# (in Claude Code, inside the project)
+# > install DNA1 into this project
+# → "✓ DNA1 updated: v2026-05-17 → v2026-06-01"
 ```
 
-Already-installed target projects keep their old copy of the spec — re-run the in-project trigger (`install DNA1 into this project`) to refresh.
+Future-Claude sessions in DNA1-installed projects also detect spec drift on entry and surface a one-line notice if the global skill has a newer version, so updates are not easy to miss.
 
 ---
 
