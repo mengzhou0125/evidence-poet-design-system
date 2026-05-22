@@ -1,131 +1,86 @@
-# evidence-poet-design-system
+# Evidence Poet Design System
 
-A Claude Code skill that installs the **DNA1 "Evidence Poet"** frontend design system into any project. After installation, every Claude session inside that project automatically follows the design standard for CSS, components, color, typography, spacing, and motion — no need to re-invoke the skill.
+A Claude Code skill ecosystem for the **DNA1 "Evidence Poet"** frontend design language.
 
-> **DNA1** is an academic-journal × architecture-magazine design language: sharp corners, three-font tension (serif headlines · sans body · mono labels), gold accents reserved for "worth-noticing" nodes, restrained motion. See [`reference/design.md`](reference/design.md) for the full spec.
+Two skills + one canonical spec. The installer wires DNA1 into a target project. The builder helps you actually construct something in DNA1.
+
+> **DNA1**: academic-journal × architecture-magazine. Sharp corners, three-font tension (serif headlines · sans body · mono labels), gold accents reserved for "worth-noticing" nodes, restrained motion. Full spec in [`evidence-poet-installer/reference/design.md`](evidence-poet-installer/reference/design.md).
 
 ---
 
 ## Install
 
-### One-liner (macOS / Linux / Windows Git Bash)
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/mengzhou0125/evidence-poet-design-system/main/install.sh | bash
-```
-
-### One-liner (Windows PowerShell)
-
-```powershell
-iex (irm https://raw.githubusercontent.com/mengzhou0125/evidence-poet-design-system/main/install.ps1)
-```
-
-### Clone & install
-
 ```bash
 git clone https://github.com/mengzhou0125/evidence-poet-design-system.git
 cd evidence-poet-design-system
-./install.sh        # or .\install.ps1 on Windows
+./install.sh          # macOS / Linux / Git Bash
+.\install.ps1         # Windows PowerShell
 ```
 
-All three methods write the skill to `~/.claude/skills/evidence-poet-design-system/`. The installer is idempotent — re-running prompts before overwriting.
+Both scripts copy `evidence-poet-installer/` and `evidence-poet-builder/` into `~/.claude/skills/`. Idempotent — re-run to update.
 
 ---
 
 ## Use
 
-In any frontend project, tell Claude Code one of:
+The two skills compose: **install once per project**, then **build every time**.
 
-- `install DNA1 into this project`
-- `导入证据诗人设计规范`
-- `/install-dna1`
+### `/install-dna1` — wires DNA1 into a project
 
-The skill will:
-
-1. Verify the directory looks like a frontend project (`package.json` / `index.html` / source files).
-2. Copy [`reference/design.md`](reference/design.md) → `<project>/.claude/design.md`.
-3. Append a directive section to `<project>/CLAUDE.md` (delimited by `<!-- DNA1-DIRECTIVE-START/END -->` sentinels) instructing future Claude sessions to follow DNA1 for all frontend work.
-
-After install, the project is self-sufficient. The skill itself does not need to load again unless you want to **update** to a newer spec — just re-run the same trigger and the installer will overwrite the local copy.
-
----
-
-## What gets installed where
-
-| File | Purpose |
-|---|---|
-| `~/.claude/skills/evidence-poet-design-system/SKILL.md` | Skill definition (Claude reads this to decide when to trigger) |
-| `~/.claude/skills/evidence-poet-design-system/reference/design.md` | Canonical DNA1 spec — the master copy |
-| `~/.claude/skills/evidence-poet-design-system/templates/claude_md_directive.md` | The directive section injected into target projects' `CLAUDE.md` |
-
-When the skill runs in a target project, it writes:
-
-| File | Purpose |
-|---|---|
-| `<project>/.claude/design.md` | Project-local copy of the spec |
-| `<project>/CLAUDE.md` (new or updated) | Contains DNA1 directive section |
-
----
-
-## Update
-
-The DNA1 spec is versioned with **semantic versioning** (`MAJOR.MINOR.PATCH`, e.g. `1.0.0`). See the `version` field in [`reference/design.md`](reference/design.md) §0 JSON. The installer and the in-project skill both compare versions numerically and **update silently when the source is newer** — no prompts unless something unusual happens (downgrade attempt, missing version field).
-
-```bash
-# refresh the global skill install
-curl -fsSL https://raw.githubusercontent.com/mengzhou0125/evidence-poet-design-system/main/install.sh | bash
-# → "✓ Skill already at v1.0.0 · no update needed."  (or)
-# → "→ Updating skill: v1.0.0 → v1.1.0"
-
-# refresh a project's local copy of the spec
-# (in Claude Code, inside the project)
-# > install DNA1 into this project
-# → "✓ DNA1 updated: v1.0.0 → v1.1.0"
+```
+install DNA1 into this project
+导入证据诗人设计规范
+/install-dna1
 ```
 
-Bump policy (maintainers): **PATCH** for clarifications/typos · **MINOR** for additions · **MAJOR** for breaking removals or value changes.
+Copies the spec to `<project>/.claude/design.md` and registers a directive in the project's `CLAUDE.md` so every future Claude session follows DNA1 automatically.
 
-Future-Claude sessions in DNA1-installed projects also detect spec drift on entry and surface a one-line notice if the global skill has a newer version, so updates are not easy to miss.
+### `/build-dna1` — actually build something
+
+```
+build a DNA1 component / page / SVG / review HTML
+用 DNA1 建 …
+/build-dna1
+```
+
+Asks 3 bootstrap questions to route you to the right reference implementation. Four application scenarios covered: React, vanilla data-dense, SVG, content-review HTML.
+
+---
+
+## Layout
+
+```
+evidence-poet-installer/          installer skill
+├── SKILL.md
+├── reference/design.md           canonical DNA1 spec (copied to projects)
+└── templates/claude_md_directive.md
+
+evidence-poet-builder/            builder's guide
+├── SKILL.md
+└── references/
+    ├── dna1-spec.md              spec mirror (same content as installer's)
+    ├── application-scenarios.md  4 consumer scenarios + vanilla↔React translation
+    └── anti-patterns.md          4 guardrails + 5 strict rules + extension governance
+```
+
+---
+
+## Versioning
+
+The spec carries a `version` field in its §0 JSON. **Current: v1.1.0.** Bump on every change: **PATCH** for clarifications · **MINOR** for additive (new token / pattern / guardrail) · **MAJOR** for breaking (changed or removed tokens / rules). The installer auto-updates projects when the source is newer.
 
 ---
 
 ## Uninstall
 
 ```bash
-rm -rf ~/.claude/skills/evidence-poet-design-system
+rm -rf ~/.claude/skills/evidence-poet-installer ~/.claude/skills/evidence-poet-builder
 ```
 
-To remove DNA1 from a target project, delete `<project>/.claude/design.md` and remove the block between `<!-- DNA1-DIRECTIVE-START -->` and `<!-- DNA1-DIRECTIVE-END -->` in `<project>/CLAUDE.md`.
-
----
-
-## What DNA1 enforces
-
-- **Tokens** — all colors, fonts, spacing, easing, border-radius come from the spec's §0 JSON. No eyeballed hex values.
-- **Type roles** — Playfair Display (serif) for headings, Plus Jakarta Sans for body, DM Mono for labels/nav/CTA. Roles are not interchangeable.
-- **Sharp corners** — `border-radius: 0` globally.
-- **Gold (`#C8A84B`) is signal, not decoration** — accent only, never as text color (fails WCAG 2.14:1).
-- **Motion is invited** — single easing curve `cubic-bezier(0.16, 1, 0.3, 1)`, shadows on hover/active only, no parallax or auto-play without disclosure.
-
-Full ruleset: [`reference/design.md`](reference/design.md) (§9 guardrails).
-
----
-
-## Skill structure
-
-```
-evidence-poet-design-system/
-├── SKILL.md                              skill definition (YAML frontmatter + installer instructions)
-├── reference/
-│   └── design.md                         canonical spec — copied to target projects
-├── templates/
-│   └── claude_md_directive.md            the directive injected into target CLAUDE.md
-├── install.sh / install.ps1              installers
-└── README.md                             this file
-```
+To remove DNA1 from a specific project: delete `<project>/.claude/design.md` and remove the block between `<!-- DNA1-DIRECTIVE-START -->` and `<!-- DNA1-DIRECTIVE-END -->` in the project's `CLAUDE.md`.
 
 ---
 
 ## License
 
-The design spec and skill are released for use in your own projects. Attribution appreciated but not required.
+MIT. See [LICENSE](LICENSE).

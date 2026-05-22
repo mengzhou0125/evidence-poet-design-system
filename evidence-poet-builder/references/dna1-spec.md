@@ -17,12 +17,12 @@
 
 ```json
 {
-  "version": "1.0.0",
   "color": {
     "warmPaper": "#F8F7F3",
     "inkBlack": "#1A1A18",
     "archiveGold": "#C8A84B",
     "coolBlueGray": "#527590",
+    "focusRing": "#527590",
     "warmBorder": "#EDE9E2",
     "cardBg": "#FFFFFF",
     "graySubtitle": "#555555",
@@ -54,13 +54,6 @@
 
 The human-readable tables in §2 / §3 / §5 / §6 derive from this block. JSON is canonical when in conflict.
 
-**Versioning**: the `version` field uses semantic versioning (`MAJOR.MINOR.PATCH`, e.g. `1.0.0` → `1.0.1` → `1.1.0` → `2.0.0`) and **must be bumped on every meaningful change** to this spec. Downstream consumers (the `evidence-poet-design-system` skill, projects with `.claude/design.md`) compare this field to detect drift and auto-update.
-
-Bump policy:
-- **PATCH** (`1.0.0` → `1.0.1`) — typo fix · clarification · no token or rule change
-- **MINOR** (`1.0.1` → `1.1.0`) — add a new token / pattern / guardrail · existing values unchanged
-- **MAJOR** (`1.1.0` → `2.0.0`) — change or remove existing tokens / rules · breaking for downstream consumers
-
 ---
 
 ## 1. Visual Theme & Atmosphere
@@ -91,6 +84,7 @@ Key Characteristics:
 | Ink Black       | #1A1A18   | Headings, primary text            | —                        |
 | Archive Gold    | #C8A84B   | Accent — borders, lines, icons    | NOT for text (2.14:1)    |
 | Cool Blue-Gray  | #527590   | CTA link text                     | —                        |
+| Focus Ring      | #527590   | :focus-visible outline            | 4.6:1 vs #F8F7F3         |
 | Warm Border     | #EDE9E2   | Dividers, card borders            | —                        |
 
 ### Text Gray Scale (background #F8F7F3)
@@ -100,6 +94,8 @@ Key Characteristics:
 | #666    | 5.36:1 | Captions, card labels         | ✓                   |
 | #717171 | 4.55:1 | Section labels, nav links     | ✓ (the floor)       |
 | #888    | 3.31:1 | Large text only (≥18px)       | ✗                   |
+
+> **Surface caveat**: ratios above assume #F8F7F3 paper background. On Surface (#f5f5f3 · button/tag BG), #717171 drops to ~4.4:1 — just under the floor. For text on Surface, use #666 or darker.
 
 ### Surface & State
 | Token          | Value                         | Role                    |
@@ -173,7 +169,7 @@ Label S (12px · 0.06em) is reserved for tighter contexts (hero · card meta · 
 - **Style B** (single paragraph): Sans 14px #666 — when no internal split exists
 
 ### Before/After Slider
-- Sharp-cornered viewport · 2px gold center handle · 28×28 knob · ⇄ glyph
+- Sharp-cornered viewport · 2px gold center handle · 28×28 visible knob (44×44 hit area on mobile · see §10) · ⇄ glyph
 - Before/After labels: Label M (Mono 13px uppercase) · top-left + top-right · paper background
 
 ### Metrics Highlight
@@ -325,7 +321,7 @@ Rule: sparing · only when the element communicates "look at me now" via system 
 | Container pad    | 48px       | 24px      | 24px     |
 | Sticky-scroll gap| 64px       | 40px      | 40px     |
 
-Touch targets: 44×44px minimum on mobile.
+Touch targets: 44×44px minimum on mobile. Visually smaller controls (e.g., Before/After 28×28 knob) extend hit area via transparent padding to meet this floor.
 Layout collapses to single column below 640px.
 
 ---
@@ -358,38 +354,18 @@ Labels:   DM Mono, 400, monospace
 
 ---
 
-## Maintenance
+## Provenance
 
-This file is the **canonical token source** for the DNA1 design language.
-Two consumers: my React app (mengz.space) + `visual-asset-generator`,
-a Claude skill I built for SVG asset generation. Both reference this file.
+This is the **DNA1 canonical token spec** — framework-agnostic, AI-readable. It is the
+single source of truth for every color, font, spacing value, and guardrail in the DNA1
+("Evidence Poet") design language.
 
-<!-- internal-only -->
+When building anything in DNA1, look up values in §0 JSON or the §2/§3/§5/§6 tables —
+never guess from memory. The four guardrails (§9 · A/B/C/D) are non-negotiable.
 
----
-
-## When you edit this file
-
-`design.md` is canonical. Downstream files must not contradict it.
-
-**After editing tokens (§0 JSON or any §2/§3/§5/§6 table)**:
-1. Run `npm run sync:tokens` from `portfolio/portfolio/` — script verifies (and writes) downstream
-2. Verify `portfolio/portfolio/src/styles/theme-dna1.css :root` matches §0 JSON
-3. Verify `~/.claude/skills/visual-asset-generator/references/svg-spec.md` color/font block matches §0 JSON
-4. Verify `portfolio/style/react-bindings.md` (the React implementation guide) cross-references current values
-
-**After editing component patterns (§4)**:
-1. Update `portfolio/style/react-bindings.md` — adjust the React class-name / file-path mapping
-2. AI sessions modifying React components will load this file via inner CLAUDE.md
-
-**After editing image standards (§8)**:
-1. Update `portfolio/best_practices/image_assets.md` — workflow + audit lives there
-
-**Sync rule**: this file is canonical. `react-bindings.md`, `theme-dna1.css`, `svg-spec.md`, `image_assets.md`, `meta_practice/best_practices/workflow/visual_review_html/tokens.css`, and `positioning/_outputs/application_pipeline.html` must not contradict it. When drift is detected, this file wins. Verify via `npm run sync:tokens` (covers 4 token-holding consumers as of 2026-05-16).
-
-**Upstream**: positioning rationale + DNA direction lives at `dna证据诗人.md` (read-only reference, edit only when positioning changes).
-
----
+> This file is a mirror maintained alongside the `evidence-poet-builder` skill. The §0 JSON block
+> is machine-readable; a token-sync check verifies all downstream consumers stay aligned
+> with it. If you find drift between this spec and any implementation, this spec wins.
 
 ## Extension governance · how to add non-canonical tokens
 
