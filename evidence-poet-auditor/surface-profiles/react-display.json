@@ -1,0 +1,29 @@
+{
+  "name": "react-display",
+  "label": "Display (React)",
+  "_specSource": "design.md §5 Density Floors (densityFloor values) · §9-B Type role mapping · §0 JSON tokens",
+  "_bpReference": null,
+  "detect": {
+    "filePattern": ["**/*.tsx", "**/*.jsx"],
+    "contentSniff": ["import React", "import {", "from 'react'", "from \"react\"", "export default function", "export function"]
+  },
+  "extensions": {
+    "allowedNamespaces": ["--dna1-", "--color-", "--font-", "--space-", "--duration-", "--ease-"],
+    "rule": "extension CSS vars must reference root tokens, never literal hex",
+    "forbidden": ["bare hex in style={} attribute", "className-scoped CSS that redefines base token"]
+  },
+  "thresholds": {
+    "densityFloor": { "minBodyTextGap": 12, "minSectionGap": 24 },
+    "rhythmStrict": []
+  },
+  "typeRoleMapping": {
+    "h1": "heading",
+    "h2": "heading",
+    "h3": "heading",
+    "h4": "heading",
+    "p": "body",
+    ".label-m": "label",
+    ".label-s": "label"
+  },
+  "fileTypes": [".tsx", ".jsx", ".ts", ".js"]
+}

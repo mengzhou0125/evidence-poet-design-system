@@ -1,0 +1,30 @@
+{
+  "name": "review-html",
+  "label": "Review HTML",
+  "_specSource": "design.md §5 Density Floors (sectionPairGap 24 · bodyTextGap 12 · cardBoxGap 16) · §'Extension governance' rules 1-5 (--review-/--severity-/--layer- namespaces · WCAG comment required)",
+  "detect": {
+    "filePattern": ["**/_review/**/*.html", "**/review_html/**/*.html"],
+    "contentSniff": ["section-pair", ".en-ref", "BUILD INVARIANTS", "card-box", "review-bg"]
+  },
+  "extensions": {
+    "allowedNamespaces": ["--review-", "--severity-", "--layer-", "--tag-", "--status-"],
+    "rule": "WCAG ratio comment required on each new --color-* extension (design.md §'Extension governance' rule 2)",
+    "forbidden": ["extension token without WCAG ratio comment"],
+    "requireCommentPattern": "WCAG \\d+\\.?\\d*:1",
+    "_bpReference": {
+      "note": "tag orthogonality (2 profiles · editorial 3x4 / technical 3x3) is an extension pattern, NOT a spec rule · enforcement is at build-time (builder skill), not audit-time",
+      "doc": "evidence-poet-builder/references/application-scenarios.md · Scenario D (tag profiles + extension-token definitions inline)"
+    }
+  },
+  "thresholds": {
+    "densityFloor": { "sectionPairGap": 24, "bodyTextGap": 12, "cardBoxGap": 16 },
+    "rhythmStrict": ["section-pair > section-pair", "card-box > card-box"]
+  },
+  "typeRoleMapping": {
+    ".section-pair__head": "heading",
+    ".section-pair__body": "body",
+    ".card-box__label": "label",
+    ".tag": "label"
+  },
+  "fileTypes": [".html"]
+}

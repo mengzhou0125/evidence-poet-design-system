@@ -59,13 +59,31 @@ Read `references/dna1-spec.md` — the canonical DNA1 token source (framework-ag
   body-text grays have a contrast floor of `#717171`.
 - **0 emoji icons** — use CSS swatches + text labels for status. User-strict.
 
-### Step 2 · Ask the three bootstrap questions
+### Step 2 · Ask ONE bootstrap question (content shape) · infer the rest
 
-The right reference implementation depends on what you are building. Ask the user:
+> Restructured 2026-05-26 per builder skill review §1 P2 — Q1 (framework) and Q3 (content shape) were redundant · content shape determines framework 90% of the time. Ask content first · infer framework · only follow-up if inferred default is wrong for user's context.
 
-1. **Framework?** React / TSX · vanilla HTML+CSS+JS · SVG · other
-2. **Standalone or hosted?** Own host · inside an existing React app · static file opened locally
-3. **Content shape?** Narrative / story · data-dense table or list · diagram · content-review · hybrid
+**Ask the user (in plain CN/EN):**
+
+> 你要构建什么? 选一个:
+>
+> - **Narrative / story page** — hero · about · blog post · case study · portfolio card
+> - **Data-dense surface** — table · list · multi-tab nav · sortable/filterable rows · status signals
+> - **Diagram** — architecture chart · flow chart · decision matrix · concept-framework figure
+> - **Content-review HTML** — proposed changes + rationale annotations side-by-side · doc revision · technical audit
+> - **Hybrid / something else** — describe what
+
+**Infer framework + host from content shape**:
+
+| Content shape | Framework default | Host default | If ambiguous, ask: |
+|---|---|---|---|
+| Narrative | React/TSX | in-app or own host | "in-app integration OR standalone host?" |
+| Data-dense | vanilla HTML/CSS/JS | static file or own host | "is this inside an existing React app?" (if yes → Scenario A+B hybrid) |
+| Diagram | SVG | embedded asset | "standalone SVG file or embedded in larger build?" (if standalone → suggest `visual-asset-generator` skill instead) |
+| Content-review | vanilla HTML (or React) | static file most common | "static file OR inside a React app?" |
+| Hybrid | depends — read 2 closest scenarios + merge | — | "what's the primary use case?" |
+
+**Only ask follow-up framework / host question if the inferred default is wrong for user's actual context.** Don't volunteer 3 questions when 1 will do.
 
 ### Step 3 · Pick the reference implementation
 
@@ -94,6 +112,21 @@ before generating code. Do not write a multi-file build on first response.
 - If you genuinely need a value the spec does not have, it is an **extension** — namespace
   it (`--review-*`, `--<consumer>-*`), document a WCAG rationale inline, and state its
   derivation. See `references/anti-patterns.md` §"Extension governance".
+
+### Step 7 · Post-build verification · handoff to auditor (added 2026-05-26 per §1 P1)
+
+After the build is done and the self-check (`anti-patterns.md` 13-item list) passes, **run the auditor for objective verification**:
+
+```bash
+node ~/.claude/skills/evidence-poet-auditor/audit.mjs <path-to-your-build>
+```
+
+Auditor exit codes:
+- `0` — pass (no P0/P1 violations)
+- `1` — fix P0/P1 violations and re-run
+- `2` — setup error (spec missing, bad args)
+
+**This completes the spec + distribution + verification triad**: spec lives in `dna1-spec.md` (canonical) · this builder skill is distribution (apply-time, BP-aware) · auditor is verification (post-build, spec-only). Without Step 7, builder declarations of "done" are unverified.
 
 ---
 

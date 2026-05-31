@@ -1,0 +1,23 @@
+{
+  "name": "svg-diagram",
+  "label": "Diagram (SVG)",
+  "_specSource": "design.md §5 Density Floors (minNodeGap 40 · minLabelToLine 8 per spec table) · §6 Geometry · §0 JSON",
+  "_bpReference": "visual-asset-generator skill encodes DNA1 for SVG (see claude_skills/evidence-poet-builder/references/application-scenarios.md Scenario C)",
+  "detect": {
+    "filePattern": ["**/*.svg"],
+    "contentSniff": ["<svg", "xmlns=\"http://www.w3.org/2000/svg\""]
+  },
+  "extensions": {
+    "allowedNamespaces": [],
+    "rule": "use inline attrs only (fill/stroke/font-family) · NO inline <style> · NO external CSS · all values from canonical palette",
+    "forbidden": ["<style> block inside SVG", "external linked stylesheet", "non-canonical fill/stroke values"]
+  },
+  "thresholds": {
+    "densityFloor": { "minNodeGap": 40, "minLabelToLine": 8 },
+    "rhythmStrict": []
+  },
+  "typeRoleMapping": {
+    "text": "label"
+  },
+  "fileTypes": [".svg"]
+}
