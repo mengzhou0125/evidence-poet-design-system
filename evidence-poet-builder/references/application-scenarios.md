@@ -131,8 +131,11 @@ rationale annotations side-by-side, or AI-review flags against existing content.
 **How DNA1 applies to review HTML** (build directly from this scenario · no separate framework to copy):
 1. Copy the DNA1 base tokens verbatim (same as Scenario B · from `dna1-spec.md` §0).
 2. Add review-semantic **extension** tokens — namespaced `--review-*` / `--audit-*` — for status, layer, and severity (definitions below). Every extension token carries an inline WCAG rationale (per spec §"Extension governance" rule 2).
-3. Import the three fonts. Sharp corners everywhere (`border-radius: 0` global reset).
-4. Layout: a main column + a sticky annotation sidebar, separated by 1px horizontal dividers.
+3. Import the three fonts — and **build CJK-safe stacks**: review-HTML status/layer tags are often Chinese (`改` / `删` / `D 精简`) and render in *mono*, so the **mono and serif stacks MUST include a CJK font first** among fallbacks (`'DM Mono', 'Microsoft YaHei', monospace` · `'Playfair Display', 'Microsoft YaHei', serif`) or Windows renders Traditional glyphs (per `dna1-spec.md` §3 "CJK / i18n font fallback"). Tip: define `--font-sans/serif/mono` once in `:root` and reference `var(--font-*)` everywhere, so the stack can't drift per-rule. Sharp corners everywhere (`border-radius: 0` global reset).
+4. Layout — **pick ONE of two archetypes** (both share a left ToC + per-section feedback; they differ only in *where the annotations sit*):
+   - **(A) right-rail** — main content column + a sticky annotation rail on the right; per-section feedback at the bottom of the rail. Best when annotations read beside the content (case study · doc revision · narrative).
+   - **(B) ToC + stacked** — a left sticky table-of-contents nav + single-column sections; each section's annotations stack *under* its content, with feedback at the bottom of the stack. Best for long technical / spec / architecture reviews (10+ sections · jump-nav matters).
+   Separate sections with 1px horizontal dividers.
 
 **Tag system (BP rule · 2 profiles · pick per use case)**:
 
@@ -207,6 +210,8 @@ All tags: filled mono-uppercase chips · `font-size` ~10px · `letter-spacing: 0
 - **Status / layer / severity tags** — filled mono-uppercase chips per CSS classes above
 - **Audit-box** — informational panel · cool-blue-gray left accent (`border-left: 3px solid var(--color-cta-muted)`) · distinct from status colors (information ≠ change)
 - **Before/after compare blocks** — coral-tint "before" (`--review-deleted-light`) · gold-tint "after" (`--review-modified-light`) · gold = proposed change
+- **Left ToC nav** — sticky left column (`~240px`) of `<a href="#section-id">` anchors + `html { scroll-behavior: smooth }`; collapses to a top band on narrow screens. Both archetypes use it.
+- **Per-section feedback + copy-all** — for reviews where the user rates each section: give each section a feedback block (a label + `✓ approve` / `⚠ revise` / `✗ reject` checkboxes + a notes `<textarea>`), at the bottom of that section's annotations. Add ONE fixed **"📋 Copy all feedback"** button — a small self-contained `<script>` IIFE that walks every feedback block, serializes section-label + checked ratings + notes + a summary tally, and writes the digest to the clipboard, so the user pastes one block into chat and the AI continues revising. **The page saves no data** (ephemeral DOM · serialize-on-demand · no localStorage / backend).
 - **Clean state** — dashed low-contrast box "section reviewed · no flags" so reviewed-fine reads differently from unreviewed
 - **DIFF mode** — re-reviewing an edited doc: section-level change tags (NEW / EDITED / RESTRUCTURED / UNCHANGED) · changed sections get gold tint + changebar · unchanged collapse to one line
 

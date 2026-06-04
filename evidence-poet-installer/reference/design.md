@@ -163,6 +163,9 @@ Atmospheric notes (visual derived properties):
 - Only 4 weights: 400 (body / labels), 500 (CTA), 600 (subtitles), 700 (titles)
 - **Serif numerals at ≥24px with mixed glyphs → `font-variant-numeric: lining-nums tabular-nums`** — Playfair Display defaults to oldstyle figures (4/3/5/7/9 have descenders below baseline) which clash with adjacent letters/symbols (`$170M+`, `4M+`). Lining figures sit on baseline at cap-height; tabular figures align column widths across multiple values. Apply to any serif-rendered data point (metric tile, summary count, etc.) that mixes digits with letters or symbols. Lowercase letters (`pp`, `px`) keep their natural x-height + descenders — that is correct typography, not a bug.
 
+### CJK / i18n font fallback (mandatory for CJK-bearing surfaces)
+The spec names 3 **Latin** fonts (above). Any token-bearing element that may render **CJK** text MUST build its CSS stack with a **script-appropriate CJK font first** among the fallbacks — Simplified-Chinese example: sans/mono → `'Microsoft YaHei', 'PingFang SC', 'Source Han Sans SC'`; serif → `'Source Han Serif SC', 'Noto Serif SC'`. **Why**: with no CJK font ahead of the generic family, Windows falls back to its OS Han-unified default and renders **Traditional** glyphs (wrong for Simplified content). This applies to **mono and serif too** — a surface whose labels/tags can be Chinese (e.g. the review-HTML surface, whose status/layer tags `改`/`删`/`D 精简` render in *mono*) must carry the CJK fallback in its *mono* stack, not only the body sans. The spec defines font **names**; consumers build the **stack**, but this fallback-ordering rule is mandatory, not optional. (Verified by the `evidence-poet-auditor` CJK-fallback check on CJK-bearing surface profiles.)
+
 ### Universal Label rule (Label M)
 Label M: 13px DM Mono · weight 400 · uppercase · letter-spacing 0.03em · color #717171.
 Semantically a label (not a heading) — paragraph element, not h2/h4.

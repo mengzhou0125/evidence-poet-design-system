@@ -3,6 +3,8 @@
   "label": "Data-heavy (vanilla HTML/JS)",
   "_specSource": "design.md §5 Density Floors (sectionGap 24 · tableCellPadding 4) · §0 JSON · §'Extension governance' rule 1 (--bright-*/--tint-*/--ink-* namespaces)",
   "_bpReference": "evidence-poet-builder Scenario B (vanilla data-dense) · single-file HTML with inline tokens · see builder skill application-scenarios.md for reference impl pattern",
+  "requireCjkFallback": true,
+  "_cjkRule": "data-heavy tools often carry CN labels/status in mono · dim #4 flags literal mono/serif stacks lacking a CJK font when the file contains CJK; var(--font-*) tokens trusted. Spec root: design.md §3 'CJK / i18n font fallback'.",
   "detect": {
     "filePattern": ["**/prototypes/**/*.html", "**/_outputs/**/*.html"],
     "contentSniff": ["STATUS_OPTIONS", "sticky-left", "renderTab", "tooltip-overlay", "action-dropdown", "data-row"]

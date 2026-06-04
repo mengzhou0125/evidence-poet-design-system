@@ -1,7 +1,9 @@
 {
   "name": "review-html",
   "label": "Review HTML",
-  "_specSource": "design.md §5 Density Floors (sectionPairGap 24 · bodyTextGap 12 · cardBoxGap 16) · §'Extension governance' rules 1-5 (--review-/--severity-/--layer- namespaces · WCAG comment required)",
+  "_specSource": "design.md §5 Density Floors (sectionPairGap 24 · bodyTextGap 12 · cardBoxGap 16) · §'Extension governance' rules 1-5 (--review-/--severity-/--layer- namespaces · WCAG comment required) · §3 'CJK / i18n font fallback'",
+  "requireCjkFallback": true,
+  "_cjkRule": "review-HTML status/layer tags render CN in MONO (改/删/D 精简) · dim #4 flags literal mono/serif stacks lacking a CJK font when the file contains CJK; var(--font-*) tokens are trusted. Spec root: design.md §3 'CJK / i18n font fallback'.",
   "detect": {
     "filePattern": ["**/_review/**/*.html", "**/review_html/**/*.html"],
     "contentSniff": ["section-pair", ".en-ref", "BUILD INVARIANTS", "card-box", "review-bg"]
