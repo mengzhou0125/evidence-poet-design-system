@@ -38,6 +38,24 @@ export function loadSpec(specPath) {
     }
   }
 
+  // Fold GOVERNED extension namespaces into the canonical set. Any object-valued top-level
+  // key (e.g. `promotedExtensions`) whose values are color literals holds sanctioned,
+  // already-WCAG-vetted extension colors — dim #01 must NOT flag these as non-canonical,
+  // regardless of which surface profile (if any) matched the file. Numeric object keys
+  // (e.g. `durations`) are skipped because their values aren't color literals.
+  for (const [k, v] of Object.entries(json)) {
+    if (k === 'color' || k === 'font' || v === null || typeof v !== 'object' || Array.isArray(v)) continue;
+    for (const [subname, subv] of Object.entries(v)) {
+      if (typeof subv !== 'string') continue;
+      const matches = subv.match(COLOR_LITERAL_RE) || [];
+      for (const m of matches) {
+        const norm = normalizeColor(m);
+        colorSet.add(norm);
+        if (!colorMap[norm]) colorMap[norm] = `${k}.${subname}`;
+      }
+    }
+  }
+
   const fontSet = new Set();
   for (const v of Object.values(json.font || {})) {
     fontSet.add(v.toLowerCase());

@@ -57,7 +57,14 @@
   "shadowHover": "0 2px 12px rgba(0, 0, 0, 0.06)",
   "imageMaxWidth": 1920,
   "promotedExtensions": {
-    "accentDark": "#7E6720"
+    "accentDark": "#7E6720",
+    "reviewDelFill": "#A85F4D",
+    "reviewDelTint": "#F3EAE7",
+    "reviewKeptTint": "#F8F2E0",
+    "reviewLayerForest": "#5A7A5A",
+    "reviewLayerOlive": "#5E5840",
+    "reviewLayerTeal": "#4E7A85",
+    "auditSeverityLow": "#5A8A5A"
   }
 }
 ```
@@ -480,12 +487,22 @@ DNA1 base tokens (§0 JSON) cover the visual language baseline. Specific consume
 | Token | Value | Role | Consumers (≥2 confirmed) |
 |---|---|---|---|
 | `accentDark` | `#7E6720` | Text-bearing darker gold · WCAG-AA pass (5.5:1 white-on-this) — for status fills · text-bearing accent | `visual_review_html/tokens.css` (`--color-accent-dark`) + `evidence-poet-builder` skill scenario D references it |
+| `reviewDelFill` | `#A85F4D` | "delete/remove" status fill · terracotta · WCAG 4.8:1 white-on-this | `visual_review_html/tokens.css` (`--review-del-fill`) + EPDS repo-validation re-derivation (2026-06-04) |
+| `reviewDelTint` | `#F3EAE7` | light coral tint · safe for body text (WCAG 11.4:1 ink-on-this) | same |
+| `reviewKeptTint` | `#F8F2E0` | light gold tint · safe for body text (WCAG 11.8:1 ink-on-this) | `visual_review_html/tokens.css` (`--review-改-light`) + re-derivation |
+| `reviewLayerForest` | `#5A7A5A` | review layer · forest green · WCAG 4.7:1 white-on-this | `visual_review_html/tokens.css` (`--review-tech-layer-a`) + re-derivation |
+| `reviewLayerOlive` | `#5E5840` | review layer · warm olive · WCAG (white-on) | `visual_review_html/tokens.css` (`--review-layer-b`) + re-derivation |
+| `reviewLayerTeal` | `#4E7A85` | review layer · slate teal · WCAG 4.8:1 white-on-this | `visual_review_html/tokens.css` (`--review-tech-layer-c`) + re-derivation |
+| `auditSeverityLow` | `#5A8A5A` | audit-box informational severity · sage green · WCAG 4.6:1 white-on-this | `visual_review_html/tokens.css` (`--audit-severity-low`) + re-derivation |
+
+> **Convergence evidence (2026-06-04 · EPDS repo-validation experiment)**: two independent consumers produced the **identical** 7 hexes above for the **same** review-callout roles — the internal `visual_review_html` BP, and an AI building from the **public repo only** (zero internal context) that **re-derived** them from the base palette + extension rules. That clears §"Extension governance" rule 5 ("≥2 consumers · same value · same use case"). They are folded into `§0 JSON promotedExtensions` so `evidence-poet-auditor` dim #01 recognizes them as canonical. Full write-up: `meta_practice/insights/epds_validation_run/CONCLUSION.md`.
 
 ### Candidate (NOT yet promoted · only 1 consumer · monitor for 2nd convergence)
 
 | Token | Value | Role | Status |
 |---|---|---|---|
-| `auditSeverityHigh/Mid/Low` | varies | Audit-box informational severity gradient | only in `visual_review_html/tokens.css` as `--audit-severity-*` · candidate if 2nd consumer adopts |
+| `auditSeverityHigh/Mid` | varies | Audit-box higher-severity steps | only in `visual_review_html/tokens.css` as `--audit-severity-*` · `low` promoted above (2nd consumer); high/mid await 2nd convergence |
+| `reviewLayerA/C` (blue `#3D5C73` · plum `#6A4A6E`) · `reviewTechLayerB` (plum `#7C5A7A`) · severity slate `#4A4A45` | varies | BP review-layer colors the public re-derivation did NOT converge on (1 consumer) | stay namespaced in `visual_review_html/tokens.css` · promote only on 2nd-consumer convergence |
 
 ### Usage rule for promoted extensions
 

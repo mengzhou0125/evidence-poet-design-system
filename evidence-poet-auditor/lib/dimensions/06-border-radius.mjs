@@ -17,6 +17,15 @@ export function check(file, ctx) {
   const isJs = /\.(tsx|jsx|ts|js)$/.test(file.path);
   const RADIUS_RE = isJs ? RADIUS_JSX_RE : RADIUS_CSS_RE;
 
+  // Collect custom properties STATICALLY defined as zero in this file, so a
+  // `border-radius: var(--x)` whose `--x: 0` is visually compliant isn't a false P0.
+  // (DNA1 prefers a literal `0` — the builder prose teaches that — but the auditor must
+  // not flag a var that is provably 0.)
+  const zeroVars = new Set();
+  const ZERO_DEF_RE = /(--[a-zA-Z0-9_-]+)\s*:\s*0(?:\.0+)?(?:px|%|em|rem)?\s*(?:!important)?\s*;/gi;
+  let zd;
+  while ((zd = ZERO_DEF_RE.exec(file.stripped)) !== null) zeroVars.add(zd[1].toLowerCase());
+
   const violations = [];
   const lines = file.stripped.split('\n');
   lines.forEach((line, i) => {
@@ -27,6 +36,9 @@ export function check(file, ctx) {
       // accept 0, 0px, 0%, 0em, 0rem, var(--radius-0) etc.
       if (/^0(\.0+)?(px|%|em|rem)?$/i.test(value)) continue;
       if (/^var\(--radius-0\b/i.test(value)) continue;
+      // accept var(--x) when --x is statically defined as 0 in this file
+      const vref = value.match(/^var\(\s*(--[a-zA-Z0-9_-]+)\s*[,)]/i);
+      if (vref && zeroVars.has(vref[1].toLowerCase())) continue;
       // accept multi-value where all are 0
       const tokens = value.split(/\s+/);
       if (tokens.every(t => /^0(\.0+)?(px|%|em|rem)?$/i.test(t))) continue;

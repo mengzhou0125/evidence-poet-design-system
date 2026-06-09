@@ -53,10 +53,19 @@ Read `references/dna1-spec.md` — the canonical DNA1 token source (framework-ag
 §0 JSON machine-readable + §1+ semantics). Lock these four before writing any code:
 
 - **`borderRadius: 0` globally** — sharp corners are a DNA1 signature. Never round a corner.
+  **Write the literal `border-radius: 0` (or omit it entirely) — do NOT create a `--radius`
+  token. Even `--radius: 0` + `border-radius: var(--radius)` reads as *parameterized* rounding
+  and fails Guardrail A (the indirection defeats the static "always 0" guarantee).**
 - **3 fonts only** — Playfair Display (serif headlines) · Plus Jakarta Sans (sans body) ·
   DM Mono (labels / nav / CTA). Roles never reverse.
-- **Color palette + WCAG floors** — gold `#C8A84B` is an accent (lines only · never text) ·
-  body-text grays have a contrast floor of `#717171`.
+- **Color palette + WCAG floors** — gold `#C8A84B` is an accent (lines only · never text).
+  **Don't eyeball a muted gray — use a WCAG-verified text/bg PAIR, because a gray that passes
+  on paper can fail on a slightly darker fill:** `#717171` is the floor **only on warm paper
+  `#F8F7F3` (4.55:1 ✓)**; on a surface fill like `#f5f5f3` it drops to **4.47:1 ✗**. For muted
+  text on any non-paper fill (surface `#f5f5f3` · hover `#eeedea` · a pill/chip bg), darken the
+  text (e.g. ink `#1A1A18`, or a darker gray) or keep the fill at paper — then **confirm with
+  the auditor's dim #11 (WCAG contrast)**. Reasoning about contrast in a comment is not enough;
+  ship the tested pair.
 - **0 emoji icons** — use CSS swatches + text labels for status. User-strict.
 
 ### Step 2 · Ask ONE bootstrap question (content shape) · infer the rest

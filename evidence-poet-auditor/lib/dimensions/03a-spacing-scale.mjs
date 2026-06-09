@@ -17,6 +17,31 @@ export const dimension = {
   applicability: 'universal',
 };
 
+// Remove balanced calc()/var()/clamp()/min()/max()/env() spans (which we trust) BEFORE
+// whitespace-tokenizing a value. Without this, `margin: calc(var(--x) * -1) 0 var(--y)`
+// splits across the inner spaces into phantom tokens `*` and `-1` that escape the calc
+// guard and raise false P1s. Replacing each span with a single space preserves the
+// remaining real tokens (e.g. the trailing `0`).
+function maskFunctional(value) {
+  let out = '';
+  for (let i = 0; i < value.length; ) {
+    const fm = value.slice(i).match(/^(calc|var|clamp|min|max|env)\(/i);
+    if (fm) {
+      i += fm[0].length;
+      let depth = 1;
+      while (i < value.length && depth > 0) {
+        if (value[i] === '(') depth++;
+        else if (value[i] === ')') depth--;
+        i++;
+      }
+      out += ' ';
+    } else {
+      out += value[i++];
+    }
+  }
+  return out;
+}
+
 function isAcceptable(token, spec) {
   const t = token.trim();
   if (!t || t === '0' || t === 'auto' || t === 'inherit' || t === 'initial') return true;
@@ -45,7 +70,7 @@ export function check(file, ctx) {
     while ((m = SPACING_RE.exec(line)) !== null) {
       const prop = m[1];
       const value = m[2].trim().replace(/\s*!important$/, '').trim();
-      const tokens = value.split(/\s+/).map(t => t.replace(/[)(;,]+$/, '').replace(/^[)(;,]+/, ''));
+      const tokens = maskFunctional(value).split(/\s+/).map(t => t.replace(/[)(;,]+$/, '').replace(/^[)(;,]+/, ''));
       for (const t of tokens) {
         if (!t) continue;
         if (isAcceptable(t, ctx.spec)) continue;
