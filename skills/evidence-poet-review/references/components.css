@@ -6,7 +6,7 @@
  *  2026-05-25_layer1_spec_review · pairs with feedback-collector.js · see README §"Layout archetypes")
  * (v1.4 · 2026-05-31: CN HARD-RULE fix · ALL font-family literals → var(--font-sans/serif/mono)
  *  defined in tokens.css with Microsoft YaHei first · fixes Traditional-glyph rendering of CN
- *  mono tags (改/删/D 精简) on Windows · positioning 2026-05-31-001 · single source can't re-diverge)
+ *  mono tags (改/删/D 精简) on Windows · single source can't re-diverge)
  *
  * Depends on tokens.css (must be loaded first).
  * For React: convert each class to a styled component / module.css class

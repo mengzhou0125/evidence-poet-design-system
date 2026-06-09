@@ -70,7 +70,7 @@
    * recurring 5×). CN appears in MONO too (Status tags 改/删/原 · Layer 故事/分层/去拉踩/精简 ·
    * section-labels) AND serif (metric numbers / titles) — so ALL THREE stacks carry YaHei.
    * components.css references these via var(--font-*) only · NO per-rule literal stacks
-   * (literals are what drifted · positioning 2026-05-31-001). Matches review_html_workflow §中文要求. */
+   * (literals are what drifted). Matches the CJK rendering requirement (Microsoft YaHei first). */
   --font-sans:  'Plus Jakarta Sans', 'Microsoft YaHei', 'PingFang SC', 'Source Han Sans SC', 'Noto Sans SC', -apple-system, sans-serif;
   --font-serif: 'Playfair Display', 'Microsoft YaHei', 'PingFang SC', 'Source Han Serif SC', 'Noto Serif SC', Georgia, serif;
   --font-mono:  'DM Mono', 'JetBrains Mono', 'Microsoft YaHei', monospace;

@@ -21,7 +21,7 @@
 // Usage:
 //   node audit.mjs <path-to-audit> [options]
 // Options:
-//   --spec=<path>                  Path to design.md (default: ../../portfolio/style/design.md)
+//   --spec=<path>                  Path to design.md (default: ./.claude/design.md in cwd)
 //   --profiles=<dir>               Path to surface-profiles/ (default: ./surface-profiles)
 //   --format=terminal|json|html    Output format (default: terminal)
 //   --surface=<name>               Force a specific surface profile (skip detection)
@@ -75,7 +75,7 @@ if (!targetPath) {
 }
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const specPath = opts.spec || resolve(__dirname, '../../portfolio/style/design.md');
+const specPath = opts.spec || resolve(process.cwd(), '.claude/design.md');
 const profilesDir = opts.profiles || join(__dirname, 'surface-profiles');
 const format = opts.format || 'terminal';
 

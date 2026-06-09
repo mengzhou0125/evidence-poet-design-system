@@ -17,17 +17,17 @@ export const dimension = {
   isAggregator: true, // signal to orchestrator
 };
 
-// Default consumer list · WORKSPACE-SPECIFIC EXAMPLES ONLY
-// External users must provide their own consumer list via:
-//   (a) `spec.consumers` array in design.md §0 JSON (preferred · canonical)
+// Default consumer list · ILLUSTRATIVE PLACEHOLDER ONLY (no real paths shipped).
+// This skill ships with NO built-in consumers. To run the cross-surface check, declare
+// your project's token-holding consumer files via either:
+//   (a) `consumers` array in design.md §0 JSON (preferred · canonical · travels with the spec)
 //   (b) `--consumers=<path-to-json>` CLI flag
-//   (c) Edit this DEFAULT_CONSUMERS array (anti-pattern · forks the skill)
-// Paths below are the original author's workspace consumers · external users WILL get
-// "consumer file missing" warnings unless they override per (a) or (b).
+// The single placeholder below is `optional`, so an unconfigured run skips silently
+// (no false "consumer missing" warning) rather than checking anything real.
 //
 // Schema per consumer:
 //   name              · human-readable label for report
-//   path              · relative to workspace root (resolved via spec.path dirname walk)
+//   path              · relative to project root (resolved via resolveProjectRoot)
 //   type              · 'css-vars' | 'markdown-table' | 'inline-css-vars'
 //   expectedMapping   · which subset of §0 tokens consumer holds
 //   optional          · skip with warning if file missing (default false)
@@ -35,43 +35,24 @@ export const dimension = {
 //                       per spec §"Extension governance" rule 4 · reverse drift check suppressed
 const DEFAULT_CONSUMERS = [
   {
-    name: 'theme-dna1.css',
-    path: 'portfolio/portfolio/src/styles/theme-dna1.css',
+    name: 'theme.css (example)',
+    path: 'src/styles/theme.css',
     type: 'css-vars',
     expectedMapping: 'full base palette',
-    extensionAllowed: false,
-  },
-  {
-    name: 'visual-asset-generator/svg-spec.md',
-    path: '.claude/skills/visual-asset-generator/references/svg-spec.md',
-    type: 'markdown-table',
-    expectedMapping: 'palette + font tables',
     optional: true,
     extensionAllowed: false,
-  },
-  {
-    name: 'visual_review_html/tokens.css',
-    path: 'meta_practice/best_practices/workflow/visual_review_html/tokens.css',
-    type: 'css-vars',
-    expectedMapping: 'base + review extension tokens',
-    extensionAllowed: true,
-  },
-  {
-    name: 'application_pipeline.html',
-    path: 'positioning/_outputs/application_pipeline.html',
-    type: 'inline-css-vars',
-    expectedMapping: 'inline tokens for vanilla data-heavy tool',
-    optional: true,
-    extensionAllowed: true,
   },
 ];
 
-// Workspace root resolution: walk up from spec path to find directory containing portfolio/ + meta_practice/
-function resolveWorkspaceRoot(specPath) {
+// Project root resolution: walk up from the spec path to the nearest directory that looks
+// like a project root (contains `.git` or `.claude`). Consumer paths resolve relative to it.
+function resolveProjectRoot(specPath) {
   let dir = dirname(resolve(specPath));
-  for (let i = 0; i < 6; i++) {
-    if (existsSync(resolve(dir, 'meta_practice')) && existsSync(resolve(dir, 'portfolio'))) return dir;
-    dir = dirname(dir);
+  for (let i = 0; i < 8; i++) {
+    if (existsSync(resolve(dir, '.git')) || existsSync(resolve(dir, '.claude'))) return dir;
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
   }
   return null;
 }
@@ -87,15 +68,15 @@ export function check(_file, ctx) {
 export function aggregate(ctx) {
   const { spec, specPath } = ctx;
   const violations = [];
-  const wsRoot = resolveWorkspaceRoot(specPath);
-  if (!wsRoot) {
+  const projectRoot = resolveProjectRoot(specPath);
+  if (!projectRoot) {
     return [{
       dimensionId: dimension.id,
       severity: 'P2',
-      path: '(workspace)',
+      path: '(project)',
       line: 0, col: 0,
       value: '',
-      message: `cannot resolve workspace root from spec path · cross-surface check skipped`,
+      message: `cannot resolve project root from spec path · cross-surface check skipped`,
       suggestion: null,
     }];
   }
@@ -104,7 +85,7 @@ export function aggregate(ctx) {
     ? spec.raw.consumers : DEFAULT_CONSUMERS;
 
   for (const consumer of consumers) {
-    const fullPath = resolve(wsRoot, consumer.path);
+    const fullPath = resolve(projectRoot, consumer.path);
     if (!existsSync(fullPath)) {
       if (!consumer.optional) {
         violations.push({

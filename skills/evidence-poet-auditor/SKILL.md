@@ -71,7 +71,7 @@ node ~/.claude/skills/evidence-poet-auditor/audit.mjs <path-to-audit> [options]
 ```
 
 Options:
-- `--spec=<path>` — design.md path (default tries relative `../../portfolio/style/design.md` from script location · external users must pass explicit path · e.g. `--spec=./design.md` for project-local install via `evidence-poet-installer`)
+- `--spec=<path>` — design.md path (default tries `./.claude/design.md` in the current working directory · resolves automatically for a project-local install via `evidence-poet-installer` · otherwise pass an explicit path, e.g. `--spec=./design.md`)
 - `--profiles=<dir>` — profile directory (default: bundled `surface-profiles/`)
 - `--format=terminal|json|html` — output format (default: terminal)
 - `--surface=<name>` — force a specific profile (skip detection)
