@@ -1,22 +1,42 @@
-# evidence-poet-design-system · installer for all 4 skills
-# (installer · builder · auditor — the spec+distribution+verification triad ·
-#  plus diagram — the SVG diagram-surface engine)
+# evidence-poet-design-system · installer
 #
 # Usage (from a local clone):
-#   .\install.ps1
+#   .\install.ps1                    # install all 5 skills (default)
+#   .\install.ps1 installer          # install just one
+#   .\install.ps1 installer builder  # install a subset
 #
+# Available skills:
+#   installer · builder · diagram · review · auditor
+#
+# Each name can be given with or without the "evidence-poet-" prefix.
 # Idempotent — re-run to update.
 
 $ErrorActionPreference = 'Stop'
 
 $skillDir = Join-Path $env:USERPROFILE '.claude\skills'
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$allSkills = @('evidence-poet-installer', 'evidence-poet-builder', 'evidence-poet-diagram', 'evidence-poet-review', 'evidence-poet-auditor')
 
 if (-not (Test-Path $skillDir)) {
   New-Item -ItemType Directory -Force -Path $skillDir | Out-Null
 }
 
-foreach ($skill in @('evidence-poet-installer', 'evidence-poet-builder', 'evidence-poet-auditor', 'evidence-poet-diagram')) {
+# Resolve which skills to install.
+if ($args.Count -eq 0) {
+  $toInstall = $allSkills
+} else {
+  $toInstall = @()
+  foreach ($arg in $args) {
+    $name = if ($arg -like 'evidence-poet-*') { $arg } else { "evidence-poet-$arg" }
+    if ($allSkills -notcontains $name) {
+      Write-Error "Unknown skill: $arg`n  Available: installer · builder · diagram · review · auditor"
+      exit 1
+    }
+    $toInstall += $name
+  }
+}
+
+foreach ($skill in $toInstall) {
   $target = Join-Path $skillDir $skill
   $source = Join-Path $scriptDir (Join-Path 'skills' $skill)
 
@@ -35,7 +55,8 @@ foreach ($skill in @('evidence-poet-installer', 'evidence-poet-builder', 'eviden
 
 Write-Host ""
 Write-Host "Next:"
-Write-Host "  - install DNA1 into a project ->  /install-dna1  (or  install DNA1 into this project)"
-Write-Host "  - build something in DNA1     ->  /build-dna1    (or  build a DNA1 component / page / etc.)"
-Write-Host "  - draw a DNA1 SVG diagram     ->  /draw-dna1     (or  用 DNA1 画架构图 / 流程图 / 概念图)"
+Write-Host "  - install DNA1 into a project ->  /install-dna1   (or  install DNA1 into this project)"
+Write-Host "  - build something in DNA1     ->  /build-dna1     (or  build a DNA1 component / page / etc.)"
+Write-Host "  - draw a DNA1 SVG diagram     ->  /draw-dna1      (or  用 DNA1 画架构图 / 流程图 / 概念图)"
+Write-Host "  - render a review HTML        ->  /review-dna1    (or  用 DNA1 出 review)"
 Write-Host "  - audit a build for DNA1 drift -> node `$env:USERPROFILE\.claude\skills\evidence-poet-auditor\audit.mjs <path> --spec=<your-design.md>"

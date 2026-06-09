@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-Hans-CN">
+<head>
+<meta charset="utf-8" />
+<title>Review HTML · A + B archetype demo</title>
+<!--
+================================================================================
+BUILD INVARIANTS
+================================================================================
+PROFILE      Demo · shows BOTH layout archetypes on one page (双击即开)
+LANG/FONT    lang="zh-Hans-CN" · CJK stack Microsoft YaHei first (per BP §中文要求)
+TAG SCHEME   Profile B · technical (3 status × 3 layer × 3 severity · .tech-tag)
+LAYOUT       .toc-layout--rail frame (left ToC shared by both archetypes)
+               · §A = right-rail annotations (.section-pair + .rationale)
+               · §B = stacked annotations (inline .rationale · position:static)
+FEEDBACK     mechanism (b) · per-section .user-feedback (✓/⚠/✗ + notes) ·
+               feedback-collector.js adds the "📋 Copy all feedback" button ·
+               page saves NO data (serialize-on-demand to clipboard)
+NOTE         A real review picks ONE archetype (and its --rail / --stacked
+               modifier). This demo mixes both only to show the difference.
+================================================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./components.css">
+</head>
+<body>
+
+<div class="toc-layout toc-layout--rail">
+
+  <!-- ============ LEFT ToC · shared by both archetypes ============ -->
+  <nav class="toc-nav">
+    <h2>目录 · Contents</h2>
+    <ul>
+      <li><a href="#top">顶部 · 概览</a></li>
+      <li><a href="#arch-a">§A · 右栏标注</a></li>
+      <li><a href="#arch-b">§B · 单栏堆叠标注</a></li>
+    </ul>
+  </nav>
+
+  <!-- ============ MAIN ============ -->
+  <main class="toc-layout__main" id="top">
+
+    <div class="meta-bar">
+      <b>Review HTML · A + B archetype demo</b>　·　双击即开 · 点右上「📋 Copy all feedback」试反馈收集<br>
+      <b>怎么用</b>：左侧目录跳转 · 每节标注底部有 <b>USER FEEDBACK</b>（勾 ✓ approve / ⚠ revise / ✗ reject + 写 notes）· 右上按钮一键把所有反馈 copy 到剪贴板 → 粘到 chat 给 AI 继续改。<b>页面不存任何数据</b>（关页前先 copy）。
+    </div>
+
+    <!-- summary counts (serif numerals · lining-nums) -->
+    <section class="summary-block">
+      <h2 style="font-family:'Playfair Display','Microsoft YaHei',Georgia,serif;font-size:var(--font-size-2xl);font-weight:700;">整体概览 <span class="en-ref">Overall · demo</span></h2>
+      <div class="counts">
+        <div class="count-item" style="color:var(--review-tech-severity-p0)"><span class="n">0</span>P0 must</div>
+        <div class="count-item" style="color:var(--review-tech-severity-p1)"><span class="n">2</span>P1 should</div>
+        <div class="count-item" style="color:var(--review-tech-severity-p2)"><span class="n">3</span>P2 note</div>
+        <div class="count-item" style="color:var(--review-tech-status-kept)"><span class="n">4</span>KEPT</div>
+      </div>
+    </section>
+
+    <!-- legend · Profile B -->
+    <div class="legend">
+      <div class="legend-section">
+        <b>Status</b>:
+        <span class="legend-row"><span class="tech-tag tech-status-rev">REV</span>改</span>
+        <span class="legend-row"><span class="tech-tag tech-status-kept">KEPT</span>保留</span>
+        <span class="legend-row"><span class="tech-tag tech-status-del">DEL</span>删</span>
+      </div>
+      <div class="legend-section">
+        <b>Severity</b>:
+        <span class="legend-row"><span class="tech-tag tech-sev-p0">P0</span>必须</span>
+        <span class="legend-row"><span class="tech-tag tech-sev-p1">P1</span>应该</span>
+        <span class="legend-row"><span class="tech-tag tech-sev-p2">P2</span>小注</span>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         §A · ARCHETYPE A · 右栏标注 (content + sticky rationale rail)
+         user-feedback sits at the BOTTOM of the rail.
+         ============================================================ -->
+    <div class="section-pair" id="arch-a">
+      <section class="section">
+        <p class="section-label">§A · Archetype A · 右栏标注</p>
+        <h2 class="section-title">右栏标注 <span class="en-ref">annotations in the rail</span></h2>
+        <p>这是被 review 的<b>正文</b>（中间栏）。在 archetype A 里，AI 标注放在右侧 <code>.rationale</code> sticky 栏 · 视线在「读正文 ↔ 看标注」之间横向跳。</p>
+        <p>正文第二段 · Plus Jakarta Sans · 16px 全局节奏。适合每节标注不多、想并排读的内容 review（case study · BP · biweekly · blog）。</p>
+      </section>
+      <aside class="rationale">
+        <h4>标注 · 右栏</h4>
+        <div class="r-item">
+          <span class="tech-tag tech-status-rev">REV</span>
+          <span class="tech-tag tech-sev-p1">P1</span>
+          <span class="r-label">这段可精简</span>
+          <div class="r-compare">
+            <div class="r-before"><span class="r-prefix">原</span>一段冗长、重复的表述，价值不高。</div>
+            <div class="r-after"><span class="r-prefix">改</span>更紧凑地表达同样意思。</div>
+          </div>
+          <p class="r-body">理由：去掉 filler · 信息密度更高。引用 <code>design.md §5</code>。</p>
+        </div>
+        <!-- USER FEEDBACK · at the bottom of the rail (trails the annotations) -->
+        <div class="user-feedback">
+          <span class="fb-label">USER FEEDBACK · §A</span>
+          <div class="rating">
+            <label><input type="checkbox"> ✓ approve</label>
+            <label><input type="checkbox"> ⚠ revise</label>
+            <label><input type="checkbox"> ✗ reject</label>
+          </div>
+          <textarea placeholder="Notes · 哪条采纳 / 哪条跳过 / 其他..."></textarea>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ============================================================
+         §B · ARCHETYPE B · 单栏堆叠标注
+         annotations stack UNDER the content (inline .rationale · position:static);
+         user-feedback sits at the BOTTOM of that stack.
+         ============================================================ -->
+    <section class="section" id="arch-b" style="border-top: var(--hairline) solid var(--color-border); padding-top: var(--space-4xl); margin-top: var(--space-2xl);">
+      <p class="section-label">§B · Archetype B · 单栏堆叠标注</p>
+      <h2 class="section-title">单栏堆叠 <span class="en-ref">annotations stacked below content</span></h2>
+      <p>这是被 review 的<b>正文</b>（全宽单栏）。在 archetype B 里，标注不在右栏 · 而是紧接正文<b>下方堆叠</b> —— 适合长技术 / spec / architecture review（每节 findings 多、右栏放不下）。</p>
+
+      <!-- annotations stacked inline (reuse .rationale/.r-item · position:static) -->
+      <div class="rationale" style="position: static;">
+        <h4>标注 · 堆叠在正文下方</h4>
+        <div class="r-item">
+          <span class="tech-tag tech-status-rev">REV</span>
+          <span class="tech-tag tech-layer-a">A spec-internal</span>
+          <span class="tech-tag tech-sev-p2">P2</span>
+          <span class="r-label">命名不一致</span>
+          <p class="r-body">同一概念在两处用了不同命名 · 建议统一 · 见 <code>§0 JSON</code>。</p>
+        </div>
+        <div class="r-item">
+          <span class="tech-tag tech-status-kept">KEPT</span>
+          <span class="r-label">整体结构 ✓</span>
+          <p class="r-body">章节划分清晰 · enforceable · 无需改动。</p>
+        </div>
+        <!-- USER FEEDBACK · at the bottom of the stacked annotations -->
+        <div class="user-feedback">
+          <span class="fb-label">USER FEEDBACK · §B</span>
+          <div class="rating">
+            <label><input type="checkbox"> ✓ approve</label>
+            <label><input type="checkbox"> ⚠ revise</label>
+            <label><input type="checkbox"> ✗ reject</label>
+          </div>
+          <textarea placeholder="Notes..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <div class="meta-bar" style="margin-top: var(--space-2xl); margin-bottom: 0;">
+      <b>底部</b>：勾完 + 写完 notes → 点右上「📋 Copy all feedback」→ 粘到 chat。两节的反馈会一起 serialize（含 section label + 勾选 + notes + 汇总）。
+    </div>
+
+  </main>
+</div>
+
+<!-- live "Copy all feedback" button · self-contained · pairs with .user-feedback blocks -->
+<script src="./feedback-collector.js"></script>
+</body>
+</html>

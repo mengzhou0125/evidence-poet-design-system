@@ -1,0 +1,146 @@
+/* ═══════════════════════════════════════════════════════════════════
+ * Review HTML · Design Tokens · v1.0 · 2026-05-16
+ *
+ * Source-of-truth: DNA1 design system (portfolio/style/design.md · §0 JSON)
+ * Review extensions: layered on top · clearly marked with `--review-*` prefix
+ *
+ * To inherit DNA1 base into a React app: prefer importing
+ * your project's `variables.css` + `theme-dna1.css` (DNA1 React implementation layer).
+ * This file is the standalone-HTML reference + the review-extension definitions.
+ * ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─── DNA1 base · color ──────────────────────────────────────────── */
+  --color-bg: #F8F7F3;                /* warm paper · page bg */
+  --color-text: #1A1A18;              /* ink black · primary text */
+  --color-text-secondary: #555;
+  --color-text-tertiary: #666;
+  --color-text-muted: #717171;        /* WCAG floor for body text */
+  --color-text-faint: #888;           /* large text only */
+  --color-border: #EDE9E2;            /* warm border · dividers */
+  --color-card-bg: #FFFFFF;
+  --color-accent: #C8A84B;            /* Archive Gold · accent lines ONLY · Guardrail C: fails WCAG as text */
+  --color-accent-dark: #7E6720;       /* derived darker gold · WCAG-AA pass (5.5:1 white-on-this) · use for text bg + text on light bg */
+  --color-cta-muted: #527590;         /* Cool Blue-Gray · canonical link color */
+  --color-surface: #f5f5f3;
+  --color-surface-hover: #eeedea;
+  --color-progress-active-bg: #faf6ee;
+  --color-active-border: rgba(200, 168, 75, 0.25);
+  --color-on-dark: #FFFFFF;           /* inverse text · review-extension · filled-label text */
+
+  /* ─── DNA1 base · spacing scale (4px-rooted) ─────────────────────── */
+  --space-3xs: 2px;                   /* review-extension · sub-base for tag-padding micro values */
+  --space-2xs: 4px;
+  --space-xs:  8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 20px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 40px;
+  --space-4xl: 48px;
+  --space-5xl: 64px;
+  --space-6xl: 80px;
+  --space-7xl: 120px;
+
+  /* ─── DNA1 base · font-size scale (mirrored from React variables.css) ─ */
+  --font-size-3xs: 10px;              /* review-extension · for very small filled labels */
+  --font-size-2xs: 11px;
+  --font-size-xs:  12px;
+  --font-size-sm:  13px;
+  --font-size-base: 14px;
+  --font-size-md:  15px;
+  --font-size-lg:  16px;
+  --font-size-xl:  18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 28px;
+  --font-size-5xl: 32px;
+  --font-size-6xl: 40px;
+  --font-size-7xl: 42px;
+
+  /* ─── DNA1 base · line / motion ──────────────────────────────────── */
+  --hairline: 1px;                    /* design.md §0 borderWidth: 1 */
+  --line-accent: 3px;                 /* design.md §0 accentLineWidth: 3 */
+  --ease-default: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ─── Font stacks · SINGLE SOURCE (added v1.4 · 2026-05-31 · CN HARD RULE) ───
+   * 🚨 Microsoft YaHei MUST sit first in the CJK part or Windows renders Han-unified
+   * codepoints as Traditional glyphs (per memory feedback_html_chinese_rendering.md ·
+   * recurring 5×). CN appears in MONO too (Status tags 改/删/原 · Layer 故事/分层/去拉踩/精简 ·
+   * section-labels) AND serif (metric numbers / titles) — so ALL THREE stacks carry YaHei.
+   * components.css references these via var(--font-*) only · NO per-rule literal stacks
+   * (literals are what drifted · positioning 2026-05-31-001). Matches review_html_workflow §中文要求. */
+  --font-sans:  'Plus Jakarta Sans', 'Microsoft YaHei', 'PingFang SC', 'Source Han Sans SC', 'Noto Sans SC', -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', 'Microsoft YaHei', 'PingFang SC', 'Source Han Serif SC', 'Noto Serif SC', Georgia, serif;
+  --font-mono:  'DM Mono', 'JetBrains Mono', 'Microsoft YaHei', monospace;
+
+  /* ─── Review-HTML widths · review-extension ──────────────────────── */
+  --img-review-max: 300px;            /* user-tunable image preview size */
+  --sidebar-width: 480px;             /* fixed right rationale column (layout archetype A · section-pair) */
+  --toc-width: 240px;                 /* fixed left ToC nav (layout archetype B · long-content reviews) */
+
+  /* ═══ Review-semantic extensions ═══════════════════════════════════
+   * 4 改动 layer dimensions × 3 status actions = orthogonal review semantics.
+   * Each rationale item carries 1 layer (A/B/C/D) + 1 status (改/原/删).
+   * ═══════════════════════════════════════════════════════════════════ */
+
+  /* Layer (A/B/C/D) — dark fills for filled-style labels · white text */
+  --review-layer-a: #3D5C73;          /* A 故事 · cool blue */
+  --review-layer-b: #5E5840;          /* B 分层 · warm olive */
+  --review-layer-c: #6A4A6E;          /* C 去拉踩 · plum */
+  --review-layer-d: #4A4A45;          /* D 精简 · neutral slate */
+
+  /* Status (改 / 原 / 删) — fill (filled label) + light (outlined card bg)
+   * CN char in CSS var name documented exception · semantic clarity > EN-only convention.
+   * Alternative EN aliases also exposed below for builders preferring EN-only. */
+  --review-改-fill: var(--color-accent-dark);   /* 改 · darker gold #7E6720 · WCAG-AA (5.5:1 white-on-this) */
+  --review-改-light: #F8F2E0;                   /* light gold tint · WCAG 11.8:1 ink-on-this · safe for body text */
+  --review-orig-fill: var(--color-text-muted);  /* 原 · neutral gray #717171 */
+  --review-orig-light: var(--color-bg);         /* warm paper · WCAG 13:1 ink-on-this */
+  --review-del-fill: #A85F4D;                   /* 删 · terracotta · no DNA1 equivalent · WCAG 4.8:1 white-on-this */
+  --review-del-light: #F3EAE7;                  /* light coral tint · WCAG 11.4:1 ink-on-this · safe for body text */
+
+  /* EN aliases for CN-named status tokens (per X1 builder ergonomics) */
+  --review-modified-fill: var(--review-改-fill);
+  --review-modified-light: var(--review-改-light);
+  --review-kept-fill: var(--review-orig-fill);
+  --review-kept-light: var(--review-orig-light);
+  --review-deleted-fill: var(--review-del-fill);
+  --review-deleted-light: var(--review-del-light);
+
+  /* ═══ Profile B · Technical review · 9-color schema ═══════════════
+   * Added 2026-05-26 per Layer 2 BP Review §X3 Option B.
+   * Profile A (above · Status×Layer · 3×4=12 combos) = editorial review (case study · doc revision · narrative).
+   * Profile B (this block · 3 axes × 3 variants = 9 colors) = technical review (code · spec · architecture).
+   * Both profiles coexist · pick per use case · see README §"Two profiles · when to use".
+   * ═══════════════════════════════════════════════════════════════════ */
+
+  /* Profile B · Status axis (warm chromatic) */
+  --review-tech-status-rev:  #527590;           /* REV  · blue-gray · revise · WCAG 4.6:1 white-on-this */
+  --review-tech-status-kept: #7E6720;           /* KEPT · gold-dark · approve · WCAG 5.5:1 white-on-this */
+  --review-tech-status-del:  #A85F4D;           /* DEL  · terracotta · remove · WCAG 4.8:1 white-on-this */
+
+  /* Profile B · Layer axis (cool/earth chromatic) */
+  --review-tech-layer-a: #5A7A5A;               /* A · forest green · spec-internal · WCAG 4.7:1 white-on-this */
+  --review-tech-layer-b: #7C5A7A;               /* B · plum · cross-layer · WCAG 5.1:1 white-on-this */
+  --review-tech-layer-c: #4E7A85;               /* C · slate teal · style/wording · WCAG 4.8:1 white-on-this */
+
+  /* Profile B · Severity axis (achromatic grayscale) */
+  --review-tech-severity-p0: #1A1A18;           /* P0 · ink · must address · WCAG 15.5:1 white-on-this */
+  --review-tech-severity-p1: #555555;           /* P1 · mid · should · WCAG 7.5:1 white-on-this */
+  --review-tech-severity-p2: #717171;           /* P2 · light · note · WCAG 4.6:1 white-on-this · floor */
+
+  /* ═══ Audit-box gradient (RENAMED 2026-05-26 per §X1 disambiguation) ═══
+   * Was: --severity-high/mid/low (confused with review-note severity P0/P1/P2)
+   * Now: --audit-severity-* (informational gradient · audit-box only · NOT tag axis)
+   * ═══════════════════════════════════════════════════════════════════ */
+  --audit-severity-high: var(--review-del-fill);       /* terracotta · severe issue · WCAG 4.8:1 */
+  --audit-severity-mid:  var(--color-accent-dark);     /* gold-dark · plan-to-fix · WCAG-AA pass */
+  --audit-severity-low:  #5A8A5A;                      /* sage green · OK · no DNA1 equiv · WCAG 4.6:1 */
+
+  /* Legacy aliases · kept until 2026-Q3 deprecation · DO NOT USE in new code */
+  --severity-high: var(--audit-severity-high);         /* DEPRECATED · rename to --audit-severity-* */
+  --severity-mid:  var(--audit-severity-mid);
+  --severity-low:  var(--audit-severity-low);
+}
