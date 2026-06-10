@@ -49,8 +49,8 @@ for post-build verification.
 ## What it does NOT do
 
 - Does not install the spec → `evidence-poet-installer`
-- Does not generate finished SVG diagrams → `evidence-poet-diagram`
-- Does not produce review HTML at depth (Scenario D defers to → `evidence-poet-review`)
+- Does not generate finished SVG diagrams → [`svg-diagram-skill`](https://github.com/mengzhou0125/svg-diagram-skill) (separate repo · pluggable spec · DNA1 default)
+- Does not produce review HTML at depth (Scenario D defers to → [`html-review-skill`](https://github.com/mengzhou0125/html-review-skill), separate repo · pluggable spec · DNA1 default)
 - Does not run package managers, build, or deploy
 - Does not make product / content decisions — only how to render them in DNA1
 
@@ -64,6 +64,10 @@ for post-build verification.
 ## Where this fits
 
 Lifecycle: **install → build → verify**. This is the **build (generalist)** stage —
-construct in DNA1 across surfaces. For two surfaces, depth-specialist skills do better:
-`evidence-poet-diagram` for standalone SVG diagrams · `evidence-poet-review` for content-review
-HTML.
+construct in DNA1 across surfaces. For two surfaces, depth-specialist skills (in
+separate repos · pluggable spec · DNA1 default) do better:
+
+- [`svg-diagram-skill`](https://github.com/mengzhou0125/svg-diagram-skill) — standalone
+  SVG diagrams
+- [`html-review-skill`](https://github.com/mengzhou0125/html-review-skill) —
+  content-review HTML

@@ -100,11 +100,17 @@ runs it, no npm install. Bind `0.0.0.0` for LAN access; a canonical JSON file ac
 **When**: vector content — architecture diagrams, flow charts, decision matrices,
 concept-framework figures, portfolio card covers.
 
-**Reference implementation**: the `evidence-poet-diagram` skill — the depth-specialist for
-the SVG diagram surface (chart-type taxonomy TYPE A–F · Python-list generation method ·
-validation pipeline). If you are generating a finished standalone diagram, **use that skill
-directly** instead of hand-building. Build SVG by hand from this scenario only when the
-diagram is embedded in a larger build this skill is producing.
+**Reference implementation**: the [`svg-diagram-skill`](https://github.com/mengzhou0125/svg-diagram-skill)
+— a standalone Claude skill (separate repo) that is the depth-specialist for the SVG
+diagram surface (chart-type taxonomy TYPE A–F · Python-list generation method · validation
+pipeline · pluggable spec with DNA1 bundled as default). If you are generating a finished
+standalone diagram, **install and use that skill directly** instead of hand-building. Build
+SVG by hand from this scenario only when the diagram is embedded in a larger build this
+skill is producing.
+
+```bash
+git clone https://github.com/mengzhou0125/svg-diagram-skill && cd svg-diagram-skill && ./install.sh
+```
 
 **How DNA1 applies in SVG**:
 1. Embed the three fonts in `<defs><style>@import url(...)</style></defs>` (or fall back
@@ -130,13 +136,18 @@ diagram is embedded in a larger build this skill is producing.
 **When**: building an HTML surface to review a document — proposed text changes plus
 rationale annotations side-by-side, or AI-review flags against existing content.
 
-**Reference implementation**: the `evidence-poet-review` skill — the depth-specialist for
-the content-review surface (2 layout archetypes · 2 tag profiles · multi-layer review
-roles · DIFF mode · CJK font discipline · feedback collector). If you are producing a
-finished review HTML, **use that skill directly** instead of hand-building from this
-scenario. The condensed walkthrough below is for inline review-HTML chunks embedded inside
-a larger build this skill is producing, or as quick reference when the dedicated skill
-isn't installed.
+**Reference implementation**: the [`html-review-skill`](https://github.com/mengzhou0125/html-review-skill)
+— a standalone Claude skill (separate repo) that is the depth-specialist for the
+content-review surface (2 layout archetypes · 2 tag profiles · multi-layer review roles ·
+DIFF mode · CJK font discipline · feedback collector · pluggable spec with DNA1 bundled
+as default). If you are producing a finished review HTML, **install and use that skill
+directly** instead of hand-building from this scenario. The condensed walkthrough below is
+for inline review-HTML chunks embedded inside a larger build this skill is producing, or
+as quick reference when the dedicated skill isn't installed.
+
+```bash
+git clone https://github.com/mengzhou0125/html-review-skill && cd html-review-skill && ./install.sh
+```
 
 **How DNA1 applies to review HTML** (build directly from this scenario · no separate framework to copy):
 1. Copy the DNA1 base tokens verbatim (same as Scenario B · from `dna1-spec.md` §0).

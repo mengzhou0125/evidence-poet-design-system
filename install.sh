@@ -3,12 +3,16 @@
 # evidence-poet-design-system · installer
 #
 # Usage (from a local clone):
-#   ./install.sh                    # install all 5 skills (default)
+#   ./install.sh                    # install all 3 skills (default)
 #   ./install.sh installer          # install just one
 #   ./install.sh installer builder  # install a subset
 #
-# Available skills:
-#   installer · builder · diagram · review · auditor
+# Available skills (the DNA1 lifecycle triad: install → build → verify):
+#   installer · builder · auditor
+#
+# Two depth-specialist skills moved to separate repos with pluggable-spec support:
+#   · SVG diagram surface     →  https://github.com/mengzhou0125/svg-diagram-skill
+#   · Content-review HTML     →  https://github.com/mengzhou0125/html-review-skill
 #
 # Each name can be given with or without the "evidence-poet-" prefix.
 # Idempotent — re-run to update.
@@ -17,7 +21,7 @@ set -euo pipefail
 
 SKILL_DIR="$HOME/.claude/skills"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ALL_SKILLS=(evidence-poet-installer evidence-poet-builder evidence-poet-diagram evidence-poet-review evidence-poet-auditor)
+ALL_SKILLS=(evidence-poet-installer evidence-poet-builder evidence-poet-auditor)
 
 mkdir -p "$SKILL_DIR"
 
@@ -39,7 +43,10 @@ else
     done
     if [ -z "$found" ]; then
       echo "✗ Unknown skill: $arg" >&2
-      echo "  Available: installer · builder · diagram · review · auditor" >&2
+      echo "  Available: installer · builder · auditor" >&2
+      echo "  For diagram / review skills, see:" >&2
+      echo "    https://github.com/mengzhou0125/svg-diagram-skill" >&2
+      echo "    https://github.com/mengzhou0125/html-review-skill" >&2
       exit 1
     fi
     TO_INSTALL+=("$found")
@@ -64,6 +71,8 @@ echo ""
 echo "Next:"
 echo "  · install DNA1 into a project →  /install-dna1   (or  install DNA1 into this project)"
 echo "  · build something in DNA1     →  /build-dna1     (or  build a DNA1 component / page / etc.)"
-echo "  · draw a DNA1 SVG diagram     →  /draw-dna1      (or  用 DNA1 画架构图 / 流程图 / 概念图)"
-echo "  · render a review HTML        →  /review-dna1    (or  用 DNA1 出 review)"
 echo "  · audit a build for DNA1 drift → node ~/.claude/skills/evidence-poet-auditor/audit.mjs <path> --spec=<your-design.md>"
+echo ""
+echo "For SVG diagrams or content-review HTMLs (pluggable specs · DNA1 default):"
+echo "  · SVG:    git clone https://github.com/mengzhou0125/svg-diagram-skill   && cd svg-diagram-skill   && ./install.sh"
+echo "  · Review: git clone https://github.com/mengzhou0125/html-review-skill && cd html-review-skill && ./install.sh"
