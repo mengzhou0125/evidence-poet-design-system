@@ -7,7 +7,9 @@ const SPACING_PROPS = ['padding', 'padding-top', 'padding-right', 'padding-botto
 
 // Use negative lookbehind so border-left / inset-top etc. don't match.
 // Also skip 'top/right/bottom/left' as standalone properties (only valid on positioned elements · low signal).
-const SPACING_RE = new RegExp(`(?<![a-zA-Z-])(${SPACING_PROPS.join('|')})\\s*:\\s*([^;}\\n]+)`, 'gi');
+// Value group stops at " ' < >  too — so an inline style="margin-left:8px">改 doesn't
+// over-capture past the attribute quote into HTML content, and prose/JS text doesn't bleed in.
+const SPACING_RE = new RegExp(`(?<![a-zA-Z-])(${SPACING_PROPS.join('|')})\\s*:\\s*([^;}\\n"'<>]+)`, 'gi');
 const VALUE_TOKEN_RE = /-?\d*\.?\d+(px|rem|em|%|vw|vh)?/g;
 
 export const dimension = {
@@ -62,8 +64,16 @@ function isAcceptable(token, spec) {
 export function check(file, ctx) {
   if (!['.css', '.scss', '.html'].some(e => file.path.endsWith(e))) return [];
 
+  // For HTML, blank out <script> blocks (their JS string content can contain `prop:`-like
+  // substrings that aren't CSS) while preserving newlines so line numbers stay correct.
+  // <style> blocks (real CSS) and inline style="" attributes are kept.
+  let text = file.stripped;
+  if (file.path.endsWith('.html')) {
+    text = text.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, m => m.replace(/[^\n]/g, ' '));
+  }
+
   const violations = [];
-  const lines = file.stripped.split('\n');
+  const lines = text.split('\n');
   lines.forEach((line, i) => {
     let m;
     SPACING_RE.lastIndex = 0;

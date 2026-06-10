@@ -1,13 +1,13 @@
-# Evidence Poet Anti-Patterns
+# DNA1 Anti-Patterns
 
 Read this before writing any code. The four guardrails are non-negotiable; the
 user-strict rules are hard rules; the extension governance keeps the system coherent as
 it grows. Most framework defaults (rounded corners, drop shadows, decorative icons)
-violate Evidence Poet — you must override them explicitly.
+violate DNA1 — you must override them explicitly.
 
 ---
 
-## The four guardrails (from `spec.md` §9 · never bend)
+## The four guardrails (from `dna1-spec.md` §9 · never bend)
 
 ### A · Visual DNA
 - ✓ Sharp corners — `border-radius: 0` on every element, no exceptions. Precision over friendliness.
@@ -67,8 +67,8 @@ explicit featured state.
 ### 4 · No hardcoded values  `[mirrors spec §11 iteration rule #1]`
 
 Never write a literal hex / px / font-family outside the token set. In CSS use
-`var(--token)`; in vanilla / SVG use the `spec.md` §0 JSON values directly and
-comment them as Evidence Poet tokens. Spacing comes only from the 4px-rooted scale.
+`var(--token)`; in vanilla / SVG use the `dna1-spec.md` §0 JSON values directly and
+comment them as DNA1 tokens. Spacing comes only from the 4px-rooted scale.
 
 ### 5 · No gold overuse  `[mirrors spec §1 + §9-A]`
 
@@ -91,7 +91,7 @@ dashboard, severity colors for a review tool. These are **extensions**. Five rul
    (`--color-accent-dark` derived from `--color-accent` for text-bearing use), don't
    paste a raw hex eyeballed from memory.
 4. **Live with the consumer** — extension tokens belong in the consumer's own token file
-   / `<style>` block, NOT in the canonical `spec.md` §0.
+   / `<style>` block, NOT in the canonical `dna1-spec.md` §0.
 5. **Cross-consumer convergence triggers promotion** — if two or more builds independently
    invent the same semantic extension (e.g. a severity scale), that is a signal it should
    become canonical — propose adding it to the spec rather than re-inventing a third time.
@@ -105,7 +105,7 @@ namespaced, documented extension. There is no third category.
 
 ## Additional spec-derived rules (added 2026-05-26 per Layer 3 review §X1 propagation)
 
-These rules exist in `spec.md` (the canonical spec) but were missing from this anti-patterns doc. Builder must teach them so artifacts pass auditor checks (auditor dims #3b / #3c / #5 / #11).
+These rules exist in `dna1-spec.md` (the canonical spec) but were missing from this anti-patterns doc. Builder must teach them so artifacts pass auditor checks (auditor dims #3b / #3c / #5 / #11).
 
 ### 6 · Spacing pair rhythm  `[mirrors spec §5 "Pair rhythm" · auditor dim #3b]`
 
@@ -141,7 +141,7 @@ Beyond rule B (no role reversal at font-family level), use the right size + weig
 - Headings → Serif (Playfair Display) · 24-48px · weight 600-700
 - Body → Sans (Plus Jakarta Sans) · 14-18px · weight 400
 - Labels / nav / CTA / tags → Mono (DM Mono) · 12-13px · weight 400-500 · uppercase + tracking 0.03-0.08em
-- See `spec.md` §3 Hierarchy table for canonical sizes + tracking + LH per role
+- See `dna1-spec.md` §3 Hierarchy table for canonical sizes + tracking + LH per role
 
 ### 10 · WCAG contrast  `[mirrors spec §2 + §9-C · auditor dim #11]`
 
@@ -149,7 +149,7 @@ Text-on-bg pairs must hit WCAG AA contrast: ≥ 4.5:1 (normal text) · ≥ 3:1 (
 
 ### 10b · Cross-surface token sync  `[mirrors spec §"Sync rule" · auditor dim #10]`
 
-If your build edits a `theme-evidence-poet.css`-equivalent token file OR adds a new consumer of design.md §0 tokens, **verify cross-surface sync** before declaring done. Spec §"Sync rule" lists 4 canonical token-holding consumers; new consumers should follow the same pattern (verbatim hex from §0 · WCAG comments · namespaced extensions).
+If your build edits a `theme-dna1.css`-equivalent token file OR adds a new consumer of design.md §0 tokens, **verify cross-surface sync** before declaring done. Spec §"Sync rule" lists 4 canonical token-holding consumers; new consumers should follow the same pattern (verbatim hex from §0 · WCAG comments · namespaced extensions).
 
 **How to verify** (run from your project root that hosts the design.md source):
 ```bash

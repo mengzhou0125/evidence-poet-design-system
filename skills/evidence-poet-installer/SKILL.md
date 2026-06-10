@@ -1,28 +1,28 @@
 ---
 name: evidence-poet-installer
-description: One-shot installer for the Evidence Poet frontend design system. Use this skill when the user asks to install / import / set up / 安装 / 导入 the Evidence Poet Design System, Evidence Poet design system, 证据诗人设计规范, or runs /install-epds in a frontend project. The skill is an installer — it copies the canonical design spec into the current project's .claude/design.md and registers a directive in the project's CLAUDE.md so that all future Claude sessions in this project automatically follow the Evidence Poet standard when doing any frontend work (CSS, components, styling, color, typography, spacing, motion). Do NOT trigger this skill for general frontend questions or design feedback unrelated to installing Evidence Poet.
+description: One-shot installer for the DNA1 ("Evidence Poet") frontend design system. Use this skill when the user asks to install / import / set up / 安装 / 导入 the DNA1 design system, Evidence Poet design system, 证据诗人设计规范, or runs /install-dna1 in a frontend project. The skill is an installer — it copies the canonical design spec into the current project's .claude/design.md and registers a directive in the project's CLAUDE.md so that all future Claude sessions in this project automatically follow the DNA1 standard when doing any frontend work (CSS, components, styling, color, typography, spacing, motion). Do NOT trigger this skill for general frontend questions or design feedback unrelated to installing DNA1.
 ---
 
 # evidence-poet-installer
 
-A one-shot installer that wires the Evidence Poet Design System into a target frontend project. After installation, the project's `CLAUDE.md` instructs all future Claude sessions to follow Evidence Poet for any frontend work — the skill itself does not need to load again.
+A one-shot installer that wires the DNA1 ("Evidence Poet") design system into a target frontend project. After installation, the project's `CLAUDE.md` instructs all future Claude sessions to follow DNA1 for any frontend work — the skill itself does not need to load again.
 
 ---
 
 ## When to run
 
-Trigger only on explicit user intent to install / import / 安装 / 导入 Evidence Poet into a project. Examples:
+Trigger only on explicit user intent to install / import / 安装 / 导入 DNA1 into a project. Examples:
 
-- "install Evidence Poet into this project"
-- "把 Evidence Poet 装到这个工程"
+- "install DNA1 into this project"
+- "把 DNA1 装到这个工程"
 - "导入证据诗人设计规范"
-- "/install-epds"
+- "/install-dna1"
 - "set up Evidence Poet design system here"
 
 Do **not** trigger for:
 - General frontend questions ("how do I style a button")
 - Design feedback unrelated to install
-- Questions *about* Evidence Poet (just answer using `reference/design.md`)
+- Questions *about* DNA1 (just answer using `reference/design.md`)
 - A project that is clearly not frontend (no `package.json`, no `index.html`, no CSS/HTML/JS source)
 
 ---
@@ -54,8 +54,8 @@ Look for `.claude/design.md` in the project root.
 
    | Comparison | Action |
    |---|---|
-   | `skill_version > project_version` | **Auto-update.** Silently overwrite Step 3 + refresh Step 4. Report: "Evidence Poet updated: v<project_version> → v<skill_version>" |
-   | `skill_version == project_version` | **No-op.** Skip Step 3 and Step 4. Report: "Evidence Poet already at v<version> · no update needed" |
+   | `skill_version > project_version` | **Auto-update.** Silently overwrite Step 3 + refresh Step 4. Report: "DNA1 updated: v<project_version> → v<skill_version>" |
+   | `skill_version == project_version` | **No-op.** Skip Step 3 and Step 4. Report: "DNA1 already at v<version> · no update needed" |
    | `skill_version < project_version` | **Warn and ask.** Project has a newer version than the skill (locally modified or skill is stale). Tell the user: "Project has v<project_version>, skill has v<skill_version>. Overwriting will lose local changes. Continue? (yes/no)". Only proceed if yes. |
    | Either version missing or unparseable | **Treat as drift.** Ask the user: "Cannot determine version (missing or invalid `version` field). Overwrite with skill copy? (yes/no)". This handles legacy installs done before versioning existed. |
 
@@ -73,7 +73,7 @@ Copy the skill's `reference/design.md` to `<project>/.claude/design.md`:
 ### Step 4 · Register the directive in CLAUDE.md
 
 If `<project>/CLAUDE.md` exists:
-- Check for the sentinel block `<!-- Evidence Poet-DIRECTIVE-START -->` / `<!-- Evidence Poet-DIRECTIVE-END -->`.
+- Check for the sentinel block `<!-- DNA1-DIRECTIVE-START -->` / `<!-- DNA1-DIRECTIVE-END -->`.
 - If present → replace the block with the latest directive template (see `templates/claude_md_directive.md` in this skill folder).
 - If absent → append the directive block to the end of `CLAUDE.md`, separated by a blank line.
 
@@ -88,22 +88,22 @@ Tell the user, in one short message. Pick the message based on what happened in 
 
 **Fresh install**:
 ```
-✓ Evidence Poet design system installed (v<version>).
+✓ DNA1 design system installed (v<version>).
   - Spec:      .claude/design.md
-  - Directive: CLAUDE.md (Evidence Poet-DIRECTIVE section)
+  - Directive: CLAUDE.md (DNA1-DIRECTIVE section)
 
-Future Claude sessions in this project will automatically follow Evidence Poet.
+Future Claude sessions in this project will automatically follow DNA1.
 ```
 
 **Updated (skill > project)**:
 ```
-✓ Evidence Poet updated: v<old> → v<new>
+✓ DNA1 updated: v<old> → v<new>
   - .claude/design.md and CLAUDE.md directive refreshed.
 ```
 
 **No-op (equal versions)**:
 ```
-✓ Evidence Poet already at v<version> · no update needed.
+✓ DNA1 already at v<version> · no update needed.
 ```
 
 **Overwrite after warn (skill < project, user confirmed)**:
@@ -111,13 +111,13 @@ Future Claude sessions in this project will automatically follow Evidence Poet.
 ⚠ Overwrote project copy v<project> with skill v<skill>. Local changes lost.
 ```
 
-Do not summarize what Evidence Poet is. Do not explain the guardrails. Installation/update is silent — the directive itself carries the rules.
+Do not summarize what DNA1 is. Do not explain the guardrails. Installation/update is silent — the directive itself carries the rules.
 
 ---
 
 ## What this skill does NOT do
 
-- ❌ Does not refactor existing code to match Evidence Poet (that would be a separate skill — out of scope here)
+- ❌ Does not refactor existing code to match DNA1 (that would be a separate skill — out of scope here)
 - ❌ Does not audit the project for current compliance
 - ❌ Does not install React components, scripts, fonts, or any runtime dependency
 - ❌ Does not modify any file other than `.claude/design.md` and `CLAUDE.md`
@@ -130,9 +130,9 @@ Strictly file-level: copy one spec, register one directive. That is all.
 
 ## Reference
 
-The canonical Evidence Poet spec lives in this skill's `reference/` folder:
+The canonical DNA1 spec lives in this skill's `reference/` folder:
 
 - `reference/design.md` — framework-agnostic spec (tokens · color · type · components · motion · guardrails). This is what gets copied to target projects.
 - `reference/react-bindings.md` — React/CSS-variable implementation mapping. Not copied during install; consult when target project is React-based and a session asks React-specific questions.
 
-Upstream canonical source for Evidence Poet (do not edit during install): `portfolio/style/design.md` in the workspace. The skill's `reference/` is a byte-identical mirror; drift is forbidden.
+Upstream canonical source for DNA1 (do not edit during install): `portfolio/style/design.md` in the workspace. The skill's `reference/` is a byte-identical mirror; drift is forbidden.

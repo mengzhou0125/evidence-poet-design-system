@@ -47,7 +47,7 @@ The 1-line claim "mechanically check against spec" hides at least 12 distinct ch
 | # | Check dimension | Spec source | Detection | Surface applicability |
 |---|---|---|---|---|
 | 1 | **Token literal · color** — hex/rgba/hsl values that should resolve to canonical | design.md §0 JSON color block | Parse CSS/JSX/HTML/SVG for hex literals; compare set | All 4 surfaces |
-| 2 | **Token reference · CSS var** — `var(--color-*)` calls reference defined tokens | theme-evidence-poet.css | Parse `var()` calls; check against defined custom properties | React + Vanilla |
+| 2 | **Token reference · CSS var** — `var(--color-*)` calls reference defined tokens | theme-dna1.css | Parse `var()` calls; check against defined custom properties | React + Vanilla |
 | 3a | **Spacing · scale adherence** — px/em values should be on 4px-rooted scale | design.md §5 spacing scale | Parse padding/margin/gap/width/height; check against scale [4,8,12,16,20,24,32,40,48,64,80,120] | All 4 surfaces |
 | 3b | **Spacing · pair rhythm consistency** — same element-pair (e.g. `h2 → p`, `card → card`, `section → section`) should use the SAME gap across the whole artifact, not 16px in one place and 24px in another | design.md §5 spacing scale + implicit rhythm convention | Static + DOM walk: collect all `(parentTag, childTag, gapValue)` triples · cluster by pair · if any pair has >1 distinct gap value across the doc, flag the outliers (smaller cluster = drift candidate) | All 4 surfaces |
 | 3c | **Spacing · visual density (breathing room)** — even when every value is on scale + every pair is consistent, the rendered layout may still be too crowded (all values clustered at 4-8px end of scale) | Runtime measurement against per-surface density floor (e.g. min-gap ≥ 12px for body text · min-gap ≥ 24px between sections) | **Runtime** — headless Chromium render · for each visible element pair, measure rendered `getBoundingClientRect` distance · flag pairs below density-floor threshold defined per surface profile (Display: dense ok; Diagram: sparse required; Review HTML: medium; Data-heavy: dense ok in table cells but sparse between sections) | All 4 surfaces (runtime) |
@@ -108,7 +108,7 @@ The dimension applies only when a known surface profile is active. The profile d
 
 | Surface | Extension namespace | Required pattern | Forbidden |
 |---|---|---|---|
-| **1 Display (React)** | `--evidence-poet-<component>-*` CSS vars | extension MUST reference root tokens, never literal hex | bare hex in `style={}` or className-scoped CSS · CSS var that doesn't trace to a root token |
+| **1 Display (React)** | `--dna1-<component>-*` CSS vars | extension MUST reference root tokens, never literal hex | bare hex in `style={}` or className-scoped CSS · CSS var that doesn't trace to a root token |
 | **2 Diagram (SVG)** | inline attrs only · no `<style>` block | `fill`/`stroke` from canonical palette · `stroke-width` from `accentLineWidth` · text from canonical font family | inline `<style>` · external CSS · non-canonical fill/stroke |
 | **3 Review HTML** | `--review-bg-*` (warm status) · `--severity-*` (grayscale) · `--layer-*` (cool) | 9-color orthogonal tag system (3 status × 3 layer × 3 severity) · WCAG ratio comment required on each new `--color-*` extension | reusing same color across orthogonal axes · extension without WCAG comment |
 | **4 Data-heavy** | `STATUS_OPTIONS_*` JS const · `--status-*` CSS vars | status badges from declared option set · sticky-left columns follow `.sticky-left-N` class · action dropdowns from `ACTIONS_*` const | ad-hoc status strings not in `STATUS_OPTIONS_*` · sticky cols without `.sticky-left-*` class |
@@ -239,7 +239,7 @@ Mirrors the `review_html_workflow.md` Severity scheme already in use:
 - `portfolio/style/design.md` §9 guardrails A-D (rules)
 - `portfolio/style/design.md` §10 responsive (breakpoints, touch targets)
 - `portfolio/style/design.md` §"Extension governance" (rule 5)
-- `theme-evidence-poet.css` (CSS var definitions · what's defined vs undefined)
+- `theme-dna1.css` (CSS var definitions · what's defined vs undefined)
 
 **Auditor loads spec once at startup** (no per-file re-parse).
 
@@ -258,7 +258,7 @@ evidence-poet-auditor <path> --fix               # auto-fix trivial drifts (hex 
 ```
 
 **Skill invocation** (Claude Code skill):
-- User says "audit this against EP spec" / "/audit-ep" / "check this for Evidence Poet drift"
+- User says "audit this against EP spec" / "/audit-ep" / "check this for DNA1 drift"
 - Skill `cd`s into project, runs the script, returns formatted report
 - Suggests fixes via Edit tool if `--fix` mode
 

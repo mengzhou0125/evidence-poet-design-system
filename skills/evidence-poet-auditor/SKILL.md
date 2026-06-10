@@ -1,19 +1,19 @@
 ---
 name: evidence-poet-auditor
-description: Audit any EP (Evidence Poet / Evidence Poet) design system artifact against the canonical spec. Use when the user says "audit this against EP spec" / "check for Evidence Poet drift" / "/audit-ep" / "run EP auditor" / mentions checking an artifact for design-system compliance. Covers 12 check dimensions across 3 layers (Universal · Surface-modulated · Surface-specific) with profile-based detection for 4 surface types (Display · Diagram · Review HTML · Data-heavy) + interactive --define-profile for new surface types. Output formats: terminal · JSON · HTML report. Subsumes sync-tokens.mjs via Dim #10 cross-surface check.
+description: Audit any EP (Evidence Poet / DNA1) design system artifact against the canonical spec. Use when the user says "audit this against EP spec" / "check for DNA1 drift" / "/audit-ep" / "run EP auditor" / mentions checking an artifact for design-system compliance. Covers 12 check dimensions across 3 layers (Universal · Surface-modulated · Surface-specific) with profile-based detection for 4 surface types (Display · Diagram · Review HTML · Data-heavy) + interactive --define-profile for new surface types. Output formats: terminal · JSON · HTML report. Subsumes sync-tokens.mjs via Dim #10 cross-surface check.
 ---
 
 # evidence-poet-auditor
 
-Self-contained CLI + Claude skill for auditing artifacts against the EP / Evidence Poet design system spec. 0 npm dependencies · pure Node.js stdlib.
+Self-contained CLI + Claude skill for auditing artifacts against the EP / DNA1 design system spec. 0 npm dependencies · pure Node.js stdlib.
 
 ## Trigger phrases
 
 - "audit this against EP spec"
-- "check for Evidence Poet drift"
+- "check for DNA1 drift"
 - "/audit-ep"
 - "run EP auditor on <path>"
-- "verify <file> against Evidence Poet"
+- "verify <file> against DNA1"
 
 ## Dimensions implemented (12 of 13 numbered · only #3c deferred)
 
@@ -41,7 +41,7 @@ Self-contained CLI + Claude skill for auditing artifacts against the EP / Eviden
 
 | # | Dimension | What it catches |
 |---|---|---|
-| 10 | Cross-surface consistency | scans known consumers (theme-evidence-poet.css, svg-spec.md, review_html tokens.css) · canonical-token presence + reverse drift check · **subsumes sync-tokens.mjs** |
+| 10 | Cross-surface consistency | scans known consumers (theme-dna1.css, svg-spec.md, review_html tokens.css) · canonical-token presence + reverse drift check · **subsumes sync-tokens.mjs** |
 | 12 | Extension governance | per-surface namespace rules · WCAG comment requirement · 9-color tag orthogonality (review-html) |
 
 ### Genuinely deferred (with reasoning)
