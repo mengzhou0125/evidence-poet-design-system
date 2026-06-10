@@ -8,6 +8,11 @@
 > serif headlines for narrative weight, gold lines for moments worth pausing.
 > Restrained, rational, but never cold.
 
+> **Naming convention** (clarification added 2026-06-09 after 3-repo split):
+> - **DNA1** = the codename / versioned identifier for this spec (DNA2 etc. would be future evolutions)
+> - **Evidence Poet** / **EPDS** = the brand name and public-facing identity
+> Both refer to the same spec. DNA1 stays as the internal/historical codename in this canonical file; the public surface (GitHub repos · skills · external READMEs) emphasizes "Evidence Poet" / "EPDS". Either name is correct in context.
+
 ---
 
 ## 0. Token Source (machine-readable)
@@ -495,7 +500,7 @@ DNA1 base tokens (§0 JSON) cover the visual language baseline. Specific consume
 | `reviewLayerTeal` | `#4E7A85` | review layer · slate teal · WCAG 4.8:1 white-on-this | `visual_review_html/tokens.css` (`--review-tech-layer-c`) + re-derivation |
 | `auditSeverityLow` | `#5A8A5A` | audit-box informational severity · sage green · WCAG 4.6:1 white-on-this | `visual_review_html/tokens.css` (`--audit-severity-low`) + re-derivation |
 
-> **Convergence evidence (2026-06-04 · EPDS repo-validation experiment)**: two independent consumers produced the **identical** 7 hexes above for the **same** review-callout roles — the internal `visual_review_html` BP, and an AI building from the **public repo only** (zero internal context) that **re-derived** them from the base palette + extension rules. That clears §"Extension governance" rule 5 ("≥2 consumers · same value · same use case"). They are folded into `§0 JSON promotedExtensions` so `evidence-poet-auditor` dim #01 recognizes them as canonical. Full write-up: `meta_practice/insights/epds_validation_run/CONCLUSION.md`.
+> **Convergence evidence**: two independent consumers produced the **identical** 7 hexes above for the **same** review-callout roles — a separate review-HTML implementation, and an AI rebuilding from the spec only (zero prior context) that **re-derived** them from the base palette + extension rules. That clears §"Extension governance" rule 5 ("≥2 consumers · same value · same use case"). They are folded into `§0 JSON promotedExtensions` so `evidence-poet-auditor` dim #01 recognizes them as canonical.
 
 ### Candidate (NOT yet promoted · only 1 consumer · monitor for 2nd convergence)
 
