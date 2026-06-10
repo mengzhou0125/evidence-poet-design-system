@@ -187,30 +187,6 @@ install.sh · install.ps1 · scripts/sync-spec.sh · README.md · LICENSE
 
 ---
 
-## Migrating from a previous install
-
-If you previously installed the 5-skill ecosystem (before the 3-repo split):
-
-```bash
-# Remove the two skills that moved out
-rm -rf ~/.claude/skills/evidence-poet-diagram
-rm -rf ~/.claude/skills/evidence-poet-review
-
-# Install the successors from their new repos
-git clone https://github.com/mengzhou0125/svg-diagram-skill && cd svg-diagram-skill && ./install.sh && cd ..
-git clone https://github.com/mengzhou0125/html-review-skill && cd html-review-skill && ./install.sh && cd ..
-
-# Refresh this repo (now 3 skills)
-cd evidence-poet-design-system
-git pull
-./install.sh
-```
-
-The trigger phrases are the same; the underlying skills are renamed and now support
-pluggable specs.
-
----
-
 ## Versioning
 
 The spec carries a `version` field in its §0 JSON. **Current: v1.1.0.** Bump on every
