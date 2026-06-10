@@ -19,7 +19,7 @@ export function check(file, ctx) {
 
   // Collect custom properties STATICALLY defined as zero in this file, so a
   // `border-radius: var(--x)` whose `--x: 0` is visually compliant isn't a false P0.
-  // (DNA1 prefers a literal `0` — the builder prose teaches that — but the auditor must
+  // (Evidence Poet prefers a literal `0` — the builder prose teaches that — but the auditor must
   // not flag a var that is provably 0.)
   const zeroVars = new Set();
   const ZERO_DEF_RE = /(--[a-zA-Z0-9_-]+)\s*:\s*0(?:\.0+)?(?:px|%|em|rem)?\s*(?:!important)?\s*;/gi;

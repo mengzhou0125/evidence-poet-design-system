@@ -48,7 +48,7 @@ function buildVarRegistry(spec, text) {
   const reg = {};
   // Spec base vars: map --color-<name> → hex (best-effort, common convention)
   for (const [name, hex] of Object.entries(spec.color.byName || {})) {
-    // theme-dna1.css typically uses --color-bg, --color-ink, --color-accent etc · we don't know exact names
+    // theme-evidence-poet.css typically uses --color-bg, --color-ink, --color-accent etc · we don't know exact names
     // Fall back to direct registry from file definitions only
   }
   // Scan file for `--name: <hex>` and `--name: var(--other)`

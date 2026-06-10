@@ -5,7 +5,7 @@
 #   .\install.ps1 installer          # install just one
 #   .\install.ps1 installer builder  # install a subset
 #
-# Available skills (the DNA1 lifecycle triad: install -> build -> verify):
+# Available skills (the Evidence Poet Design System lifecycle triad: install -> build -> verify):
 #   installer · builder · auditor
 #
 # Two depth-specialist skills moved to separate repos with pluggable-spec support:
@@ -62,10 +62,10 @@ foreach ($skill in $toInstall) {
 
 Write-Host ""
 Write-Host "Next:"
-Write-Host "  - install DNA1 into a project ->  /install-dna1   (or  install DNA1 into this project)"
-Write-Host "  - build something in DNA1     ->  /build-dna1     (or  build a DNA1 component / page / etc.)"
-Write-Host "  - audit a build for DNA1 drift -> node `$env:USERPROFILE\.claude\skills\evidence-poet-auditor\audit.mjs <path> --spec=<your-design.md>"
+Write-Host "  - install Evidence Poet into a project ->  /install-epds   (or  install Evidence Poet into this project)"
+Write-Host "  - build something in Evidence Poet     ->  /build-epds     (or  build an Evidence Poet component / page / etc.)"
+Write-Host "  - audit a build for Evidence Poet drift -> node `$env:USERPROFILE\.claude\skills\evidence-poet-auditor\audit.mjs <path> --spec=<your-design.md>"
 Write-Host ""
-Write-Host "For SVG diagrams or content-review HTMLs (pluggable specs · DNA1 default):"
+Write-Host "For SVG diagrams or content-review HTMLs (pluggable specs · Evidence Poet default):"
 Write-Host "  - SVG:    git clone https://github.com/mengzhou0125/svg-diagram-skill   && cd svg-diagram-skill   && .\install.ps1"
 Write-Host "  - Review: git clone https://github.com/mengzhou0125/html-review-skill && cd html-review-skill && .\install.ps1"

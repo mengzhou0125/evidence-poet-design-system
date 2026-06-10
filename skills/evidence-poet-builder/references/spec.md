@@ -1,6 +1,6 @@
-# DNA1 — The Evidence Poet
+# Evidence Poet — The Evidence Poet
 
-> **DNA1 — a portable design system spec.** Framework-agnostic · AI-readable · machine-checkable.
+> **Evidence Poet — a portable design system spec.** Framework-agnostic · AI-readable · machine-checkable.
 > Use as prompt context when generating components, assets, or layouts in this brand.
 > (Originally authored for `mengz.space` · now released as a reusable spec under MIT License.)
 >
@@ -407,7 +407,7 @@ Rule: sparing · only when the element communicates "look at me now" via system 
 | Pre-defined col spans (`.col-narrow` / `.col-text` / `.col-image`) | grid-column 1/9 · 1/7 · 7/-1 (8/6/6 col spans) | collapse to `1/-1` (full-width) | collapse to `1/-1` |
 | Component grids (`.projects-grid` · `.contact-grid` · `.card-carousel`) | typically `1fr 1fr` (2-col) | `1fr 1fr` mostly | `1fr` (single col) |
 
-> **Grid behavior**: the 12-column grid container stays 12 cols at all breakpoints · pre-defined `.col-*` span classes collapse children to full-width below 1024px. Component-internal grids (project cards · contact · carousels) have their own collapse rules (typically 2→1 at 640px). Verify against your project's `layout.css` (this DNA1 reference assumes that convention).
+> **Grid behavior**: the 12-column grid container stays 12 cols at all breakpoints · pre-defined `.col-*` span classes collapse children to full-width below 1024px. Component-internal grids (project cards · contact · carousels) have their own collapse rules (typically 2→1 at 640px). Verify against your project's `layout.css` (this Evidence Poet reference assumes that convention).
 
 Touch targets: 44×44px minimum on mobile. Visually smaller controls (e.g., Before/After 28×28 knob) extend hit area via transparent padding to meet this floor.
 Layout collapses to single column below 640px.
@@ -446,7 +446,7 @@ Labels:   DM Mono, 400, monospace
 
 ## Maintenance
 
-This file is the **canonical token source** for the DNA1 design language.
+This file is the **canonical token source** for the Evidence Poet design language.
 All downstream consumers (theme CSS files · framework-specific implementations · generator specs · status/signal UIs) must reference these values · never redeclare them. When drift is detected, this file wins.
 
 For workspace-specific consumer list + sync workflow, see internal-only section below (stripped from public installer mirror).
@@ -458,7 +458,7 @@ For workspace-specific consumer list + sync workflow, see internal-only section 
 
 > Added 2026-05-16 after `visual_review_html` BP promotion surfaced the need for explicit rules.
 
-DNA1 base tokens (§0 JSON) cover the visual language baseline. Specific consumers (review HTML · data-dense tools · status/signal UIs) need additional tokens not in the base set (severity colors · env signals · review-semantic labels · etc.). These are **extensions** · the discipline:
+Evidence Poet base tokens (§0 JSON) cover the visual language baseline. Specific consumers (review HTML · data-dense tools · status/signal UIs) need additional tokens not in the base set (severity colors · env signals · review-semantic labels · etc.). These are **extensions** · the discipline:
 
 **5 rules for adding extension tokens** (any consumer):
 
@@ -474,7 +474,7 @@ DNA1 base tokens (§0 JSON) cover the visual language baseline. Specific consume
 
    **Current status** (2026-05-26): 0 cross-consumer convergence promoted. `--severity-*` lives in `visual_review_html/tokens.css` only. `--color-accent-dark #7E6720` is a **candidate** for promotion (used in `visual_review_html/tokens.css` + `evidence-poet-builder` skill scenario D · per Layer 2 BP Review §X2).
 
-**Anti-pattern · drift via approximation**: when adding a new consumer, NEVER eyeball hex values from memory. Copy verbatim from §0 JSON OR import `theme-dna1.css` / `visual_review_html/tokens.css`. Drift caught 2026-05-15 (my own review_html_workflow CSS skeleton drifted on `bg` / `gold` / `border` / `muted` / `dim` · all approximate · 0 WCAG rationale) · root cause was eyeballing. Fixed by 2026-05-16 promotion (BP doc canonical · sync-tokens.mjs §9 audit guard).
+**Anti-pattern · drift via approximation**: when adding a new consumer, NEVER eyeball hex values from memory. Copy verbatim from §0 JSON OR import `theme-evidence-poet.css` / `visual_review_html/tokens.css`. Drift caught 2026-05-15 (my own review_html_workflow CSS skeleton drifted on `bg` / `gold` / `border` / `muted` / `dim` · all approximate · 0 WCAG rationale) · root cause was eyeballing. Fixed by 2026-05-16 promotion (BP doc canonical · sync-tokens.mjs §9 audit guard).
 
 ---
 
@@ -495,7 +495,7 @@ DNA1 base tokens (§0 JSON) cover the visual language baseline. Specific consume
 | `reviewLayerTeal` | `#4E7A85` | review layer · slate teal · WCAG 4.8:1 white-on-this | `visual_review_html/tokens.css` (`--review-tech-layer-c`) + re-derivation |
 | `auditSeverityLow` | `#5A8A5A` | audit-box informational severity · sage green · WCAG 4.6:1 white-on-this | `visual_review_html/tokens.css` (`--audit-severity-low`) + re-derivation |
 
-> **Convergence evidence (2026-06-04 · EPDS repo-validation experiment)**: two independent consumers produced the **identical** 7 hexes above for the **same** review-callout roles — the internal `visual_review_html` BP, and an AI building from the **public repo only** (zero internal context) that **re-derived** them from the base palette + extension rules. That clears §"Extension governance" rule 5 ("≥2 consumers · same value · same use case"). They are folded into `§0 JSON promotedExtensions` so `evidence-poet-auditor` dim #01 recognizes them as canonical. Full write-up: `meta_practice/insights/epds_validation_run/CONCLUSION.md`.
+> **Convergence evidence**: two independent consumers produced the **identical** 7 hexes above for the **same** review-callout roles — a separate review-HTML implementation, and an AI rebuilding from the spec only (zero prior context) that **re-derived** them from the base palette + extension rules. That clears §"Extension governance" rule 5 ("≥2 consumers · same value · same use case"). They are folded into `§0 JSON promotedExtensions` so `evidence-poet-auditor` dim #01 recognizes them as canonical.
 
 ### Candidate (NOT yet promoted · only 1 consumer · monitor for 2nd convergence)
 

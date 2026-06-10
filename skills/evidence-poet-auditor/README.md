@@ -1,6 +1,6 @@
 # evidence-poet-auditor
 
-Self-contained CLI + Claude skill for auditing artifacts against the DNA1 ("Evidence Poet")
+Self-contained CLI + Claude skill for auditing artifacts against the Evidence Poet
 design system spec. **0 npm dependencies** — pure Node.js stdlib.
 
 12 check dimensions across 3 layers (Universal · Surface-modulated · Surface-specific) with
@@ -40,9 +40,9 @@ Options:
 
 ```
 audit this against EP spec
-check for DNA1 drift
+check for Evidence Poet drift
 run EP auditor on <path>
-verify <file> against DNA1
+verify <file> against Evidence Poet
 /audit-ep
 ```
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# sync-spec.sh — DNA1 spec mirror drift check (intra-repo only)
+# sync-spec.sh — Evidence Poet spec mirror drift check (intra-repo only)
 #
 # Canonical:  skills/evidence-poet-installer/reference/design.md
-# Mirror:     skills/evidence-poet-builder/references/dna1-spec.md
+# Mirror:     skills/evidence-poet-builder/references/spec.md
 #
 # (As of the 3-repo split, the diagram + review skills moved to separate repos
-# with their own bundled DNA1 mirrors at specs/dna1-default.md. Cross-repo spec
+# with their own bundled Evidence Poet mirrors at specs/default-spec.md. Cross-repo spec
 # sync is currently MANUAL — see "Cross-repo sync" below. This script only
 # covers the in-repo mirror.)
 #
@@ -19,8 +19,8 @@
 # ── Cross-repo sync (manual until automated) ──
 # When this canonical spec changes, the bundled defaults in the two sibling
 # repos need to be re-synced:
-#   - https://github.com/mengzhou0125/svg-diagram-skill   · specs/dna1-default.md
-#   - https://github.com/mengzhou0125/html-review-skill · specs/dna1-default.md
+#   - https://github.com/mengzhou0125/svg-diagram-skill   · specs/default-spec.md
+#   - https://github.com/mengzhou0125/html-review-skill · specs/default-spec.md
 # Do this by hand (cp + commit + push in each clone) after editing here.
 
 set -euo pipefail
@@ -28,7 +28,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CANONICAL="$REPO_ROOT/skills/evidence-poet-installer/reference/design.md"
 MIRRORS=(
-  "$REPO_ROOT/skills/evidence-poet-builder/references/dna1-spec.md"
+  "$REPO_ROOT/skills/evidence-poet-builder/references/spec.md"
 )
 
 if [ ! -f "$CANONICAL" ]; then

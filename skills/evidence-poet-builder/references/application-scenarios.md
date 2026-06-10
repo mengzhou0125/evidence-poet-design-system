@@ -1,6 +1,6 @@
-# DNA1 Application Scenarios
+# Evidence Poet Application Scenarios
 
-DNA1 is framework-agnostic. The *spec* (`dna1-spec.md`) defines the design language;
+Evidence Poet is framework-agnostic. The *spec* (`spec.md`) defines the design language;
 this file defines **how the language applies** across four kinds of build. Each scenario
 points to a real reference implementation — copy its patterns rather than reinventing.
 
@@ -30,11 +30,11 @@ before/after sliders, lightboxes.
 `ProjectsGrid`, `AccordionCarousel`, `BeforeAfterSlider`, `VerticalStickyScroll`,
 `Lightbox`, `ThemeToggle` components.
 
-**How DNA1 applies in React**:
-1. Add `data-theme="dna1"` to `<html>`.
-2. All token overrides live in one file (`theme-dna1.css`) under `[data-theme="dna1"] :root { … }`.
+**How Evidence Poet applies in React**:
+1. Add `data-theme="evidence-poet"` to `<html>`.
+2. All token overrides live in one file (`theme-evidence-poet.css`) under `[data-theme="evidence-poet"] :root { … }`.
 3. Components reference values via `var(--token-name)` — never inline a literal color / size.
-4. A sync script verifies the CSS variables stay aligned with `dna1-spec.md` §0 JSON.
+4. A sync script verifies the CSS variables stay aligned with `spec.md` §0 JSON.
 
 **Token → CSS-variable mapping** (the canonical naming · use these exact names):
 
@@ -60,7 +60,7 @@ before/after sliders, lightboxes.
 - **Metrics highlight** — 1- or 2-col grid · sharp cell borders · value Serif 36/700 ink black · label Sans 13 #666 · use to highlight outcome numbers
 - **Accordion carousel** — width-only widen (bookmark-reveal · no scaling) · 0.55s canonical easing · active BG `var(--color-progress-active-bg)` · border `var(--color-active-border)` · pair with autoplay disclosure (gold progress bar per §7)
 - **Link patterns** — 3 patterns role-driven · NEVER reverse: (a) Card CTA Mono 13 #527590 no-underline arrow-suffix · (b) Body inline Sans inherit #527590 underline 2px offset · (c) Structural nav Mono #717171 (gold-underline on active section nav) · ✗ gold / ink as link color
-- **Theme toggle** — floating button sets `data-theme="dna1"` on `<html>` (mechanism · not a component)
+- **Theme toggle** — floating button sets `data-theme="evidence-poet"` on `<html>` (mechanism · not a component)
 
 ---
 
@@ -72,15 +72,15 @@ local server.
 
 **Reference implementation pattern**: a single-file `<your-app>.html` — full UI with CSS in `<style>` block and JS in `<script>` block · no build step. Optionally served by a zero-dep Node `http` server (or any static server) for development. Pattern shipped with this skill includes 2 reference impls (one with JD/application context · one with generic-project context) — see workspace internal repo for actual files · pattern is identical regardless.
 
-**How DNA1 applies in vanilla**:
-1. `<html data-theme="dna1">` works in vanilla too (or just apply tokens at `:root`).
-2. Copy the DNA1 tokens **verbatim** from `dna1-spec.md` §0 into the `<style>` `:root` block.
-   Mark them with a comment: `/* DNA1 tokens · verbatim from dna1-spec.md §0 */`.
+**How Evidence Poet applies in vanilla**:
+1. `<html data-theme="evidence-poet">` works in vanilla too (or just apply tokens at `:root`).
+2. Copy the Evidence Poet tokens **verbatim** from `spec.md` §0 into the `<style>` `:root` block.
+   Mark them with a comment: `/* Evidence Poet tokens · verbatim from spec.md §0 */`.
 3. Import the three fonts via Google Fonts `<link>` in `<head>` (Playfair Display ·
    Plus Jakarta Sans · DM Mono).
 
 **Reusable patterns**:
-- **DNA1 tokens verbatim copy** — direct copy of §0 JSON values into CSS custom properties
+- **Evidence Poet tokens verbatim copy** — direct copy of §0 JSON values into CSS custom properties
 - **Status signals without emoji** — a 6×6px solid CSS swatch + a text label (`<span class="swatch swatch--green"></span> Green`). NEVER 🟢🟡🔴. This is a hard rule (see anti-patterns).
 - **Two-tier signal-color extension** — for status UIs: a `--bright-*` solid set (swatch
   dots, accent bars), a `--tint-*` low-alpha set (background tints), an `--ink-*` set
@@ -99,13 +99,13 @@ runs it, no npm install. Bind `0.0.0.0` for LAN access; a canonical JSON file ac
 
 **When**: vector content — architecture diagrams, flow charts, decision matrices, hierarchy trees, comparison figures, concept-framework figures.
 
-**Use the [`svg-diagram-skill`](https://github.com/mengzhou0125/svg-diagram-skill) — install and trigger directly.** It's a standalone Claude skill (separate repo · MIT) that is the depth-specialist for this surface: TYPE A–F chart taxonomy + Python-list generation method + validation pipeline + pluggable spec (DNA1 bundled as default). **This builder does not reproduce that depth** — for any standalone SVG diagram, install the skill rather than hand-building from this scenario.
+**Use the [`svg-diagram-skill`](https://github.com/mengzhou0125/svg-diagram-skill) — install and trigger directly.** It's a standalone Claude skill (separate repo · MIT) that is the depth-specialist for this surface: TYPE A–F chart taxonomy + Python-list generation method + validation pipeline + pluggable spec (Evidence Poet bundled as default). **This builder does not reproduce that depth** — for any standalone SVG diagram, install the skill rather than hand-building from this scenario.
 
 ```bash
 git clone https://github.com/mengzhou0125/svg-diagram-skill && cd svg-diagram-skill && ./install.sh
 ```
 
-If you must hand-build an SVG inline (e.g. an SVG embedded in a Scenario A React component this skill is producing), the four non-negotiable rules from DNA1 Guardrails are: sharp corners (`rx="0"` everywhere) · three fonts only (Playfair serif · Plus Jakarta sans · DM Mono — embedded in `<defs><style>@import …</style></defs>`) · colors come from `dna1-spec.md` §0 JSON values directly (SVG has no CSS variable support across renderers) · gold `#C8A84B` 3px solid line marks at most 1–2 important paths, never decoration. For canvas sizing, vertical spacing scale, chart-type layouts, theme switching, and validation — install the skill.
+If you must hand-build an SVG inline (e.g. an SVG embedded in a Scenario A React component this skill is producing), the four non-negotiable rules from Evidence Poet Guardrails are: sharp corners (`rx="0"` everywhere) · three fonts only (Playfair serif · Plus Jakarta sans · DM Mono — embedded in `<defs><style>@import …</style></defs>`) · colors come from `spec.md` §0 JSON values directly (SVG has no CSS variable support across renderers) · gold `#C8A84B` 3px solid line marks at most 1–2 important paths, never decoration. For canvas sizing, vertical spacing scale, chart-type layouts, theme switching, and validation — install the skill.
 
 ---
 
@@ -113,13 +113,13 @@ If you must hand-build an SVG inline (e.g. an SVG embedded in a Scenario A React
 
 **When**: building an HTML surface to review a document — proposed text changes plus rationale annotations side-by-side, or AI-review flags against existing content.
 
-**Use the [`html-review-skill`](https://github.com/mengzhou0125/html-review-skill) — install and trigger directly.** It's a standalone Claude skill (separate repo · MIT) that is the depth-specialist for this surface: 2 layout archetypes (right-rail · stacked) + 2 tag profiles (editorial 3×4 · technical 3×3=9) + multi-layer review roles + DIFF mode + CJK font discipline + feedback collector + pluggable spec (DNA1 bundled as default). **This builder does not reproduce that depth** — for any review HTML, install the skill rather than hand-building from this scenario.
+**Use the [`html-review-skill`](https://github.com/mengzhou0125/html-review-skill) — install and trigger directly.** It's a standalone Claude skill (separate repo · MIT) that is the depth-specialist for this surface: 2 layout archetypes (right-rail · stacked) + 2 tag profiles (editorial 3×4 · technical 3×3=9) + multi-layer review roles + DIFF mode + CJK font discipline + feedback collector + pluggable spec (Evidence Poet bundled as default). **This builder does not reproduce that depth** — for any review HTML, install the skill rather than hand-building from this scenario.
 
 ```bash
 git clone https://github.com/mengzhou0125/html-review-skill && cd html-review-skill && ./install.sh
 ```
 
-If you must hand-build a review HTML chunk inline (e.g. embedded inside a Scenario A React app), the four non-negotiable rules are: `<html lang="zh-Hans-CN">` for any CJK content (**NOT `zh-CN`** — the `Hans` script subtag is required or Windows renders Han-unified codepoints as Traditional glyphs · this is a recurring failure mode) · CJK-safe font stacks with `Microsoft YaHei` placed first in the CJK fallback chain across all three font roles (define `--font-sans/serif/mono` once in `:root` and reference `var(--font-*)` everywhere · the single source can't re-diverge per-rule) · sharp corners global reset (`* { border-radius: 0 }`) · DNA1 base tokens from `dna1-spec.md` §0 plus review-extension tokens namespaced `--review-*` / `--audit-*` with inline WCAG rationale per `dna1-spec.md` §"Extension governance". For full archetype CSS, tag profile schemas (Profile A editorial 3 status × 4 layer · Profile B technical 3 axes × 3 variants), feedback-collector implementation, DIFF mode mechanisms, and review-role taxonomy — install the skill.
+If you must hand-build a review HTML chunk inline (e.g. embedded inside a Scenario A React app), the four non-negotiable rules are: `<html lang="zh-Hans-CN">` for any CJK content (**NOT `zh-CN`** — the `Hans` script subtag is required or Windows renders Han-unified codepoints as Traditional glyphs · this is a recurring failure mode) · CJK-safe font stacks with `Microsoft YaHei` placed first in the CJK fallback chain across all three font roles (define `--font-sans/serif/mono` once in `:root` and reference `var(--font-*)` everywhere · the single source can't re-diverge per-rule) · sharp corners global reset (`* { border-radius: 0 }`) · Evidence Poet base tokens from `spec.md` §0 plus review-extension tokens namespaced `--review-*` / `--audit-*` with inline WCAG rationale per `spec.md` §"Extension governance". For full archetype CSS, tag profile schemas (Profile A editorial 3 status × 4 layer · Profile B technical 3 axes × 3 variants), feedback-collector implementation, DIFF mode mechanisms, and review-role taxonomy — install the skill.
 
 ---
 
@@ -130,7 +130,7 @@ If you must hand-build a review HTML chunk inline (e.g. embedded inside a Scenar
 - **React + embedded SVG diagram** (A + C) — narrative page with inline SVG charts
 - **Vanilla data-dense + content-review** (B + D) — review HTML for a data-heavy artifact (annotated table)
 
-**How to handle**: read the 2 closest scenarios · take patterns from each · resolve any conflicts (e.g. React data-dense uses Scenario A's `data-theme="dna1"` mechanism + Scenario B's sticky table patterns + Scenario A's `var(--token)` for colors).
+**How to handle**: read the 2 closest scenarios · take patterns from each · resolve any conflicts (e.g. React data-dense uses Scenario A's `data-theme="evidence-poet"` mechanism + Scenario B's sticky table patterns + Scenario A's `var(--token)` for colors).
 
 **Common hybrid worked examples**:
 
@@ -162,7 +162,7 @@ If you are building in React but want a pattern from a vanilla reference:
 
 | Vanilla | React equivalent |
 |---|---|
-| `<style>` block tokens | move to `theme-dna1.css` under `[data-theme="dna1"]` |
+| `<style>` block tokens | move to `theme-evidence-poet.css` under `[data-theme="evidence-poet"]` |
 | `<script>` event handlers | lift to `useEffect` + `useState` |
 | `getElementById` queries | `useRef` or controlled state |
 | `fetch()` polling | `useEffect` + `setInterval`, or a data-fetching hook |
@@ -170,8 +170,8 @@ If you are building in React but want a pattern from a vanilla reference:
 | body-level tooltip div | a portal (`createPortal(<Tooltip/>, document.body)`) |
 | sticky-left / sticky-top table | same CSS · wrap in a component returning `<table>` |
 
-If building in vanilla but copying a React pattern: `data-theme="dna1"` works on
-`<html>` in vanilla; inline `theme-dna1.css` into the `<style>` block; React components
+If building in vanilla but copying a React pattern: `data-theme="evidence-poet"` works on
+`<html>` in vanilla; inline `theme-evidence-poet.css` into the `<style>` block; React components
 become HTML semantic sections with the same class names.
 
 ---
@@ -185,6 +185,6 @@ Most real builds are hybrids. Rules of thumb:
   (hero, card, sticky-scroll as semantic sections)
 - **Diagram inside a page** → Scenario C for the SVG + the host page's scenario for the frame
 
-The spec (`dna1-spec.md`) and the anti-patterns (`anti-patterns.md`) are constant across
+The spec (`spec.md`) and the anti-patterns (`anti-patterns.md`) are constant across
 every scenario and every hybrid. Only the *mechanism* (how tokens reach the element)
 changes.

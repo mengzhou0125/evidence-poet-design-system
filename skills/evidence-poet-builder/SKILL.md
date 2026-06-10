@@ -1,27 +1,27 @@
 ---
 name: evidence-poet-builder
-description: Build something new in the DNA1 ("Evidence Poet") design language — a React component or page, a vanilla HTML/CSS/JS tool, an SVG diagram, or a content-review HTML. Use when starting fresh frontend or visual work that should follow DNA1. Triggers on "build X in DNA1", "用 DNA1 建", "make a DNA1-styled component/page/tool", "new DNA1 product", "/build-dna1". Provides the canonical token spec, three bootstrap questions to pick the right reference implementation, application patterns across four consumer scenarios, and the anti-pattern list. Distinct from evidence-poet-installer, which only installs the spec into a project — this skill is the builder's guide for actually constructing DNA1-compliant artifacts. Do NOT trigger for general frontend questions, design feedback, or merely installing the spec.
+description: Build something new in the Evidence Poet design language — a React component or page, a vanilla HTML/CSS/JS tool, an SVG diagram, or a content-review HTML. Use when starting fresh frontend or visual work that should follow Evidence Poet. Triggers on "build X in Evidence Poet", "用 Evidence Poet 建", "make an Evidence Poet-styled component/page/tool", "new Evidence Poet product", "/build-epds". Provides the canonical token spec, three bootstrap questions to pick the right reference implementation, application patterns across four consumer scenarios, and the anti-pattern list. Distinct from evidence-poet-installer, which only installs the spec into a project — this skill is the builder's guide for actually constructing Evidence Poet-compliant artifacts. Do NOT trigger for general frontend questions, design feedback, or merely installing the spec.
 ---
 
 # evidence-poet-builder
 
-The builder's guide for the DNA1 ("Evidence Poet") design language. When you need to
+The builder's guide for the Evidence Poet design language. When you need to
 construct something new — a React component, a vanilla single-file tool, an SVG diagram,
-a content-review HTML — in DNA1, this skill gives you the canonical spec, the right
+a content-review HTML — in Evidence Poet, this skill gives you the canonical spec, the right
 reference implementation to copy from, and the anti-patterns to avoid.
 
-DNA1's character, in one line: *academic journal × architecture magazine — mono labels
+Evidence Poet's character, in one line: *academic journal × architecture magazine — mono labels
 for information order, serif headlines for narrative weight, gold lines for moments worth
 pausing. Restrained, rational, never cold.*
 
 ---
 
-## Two DNA1 skills · which one you want
+## Two Evidence Poet skills · which one you want
 
 | Skill | Role | Run |
 |---|---|---|
 | `evidence-poet-installer` | **Installer** — copies the spec into a project's `.claude/design.md` + registers a CLAUDE.md directive | once per project |
-| **`evidence-poet-builder`** (this skill) | **Builder's guide** — given DNA1 is the target language, how to actually construct an artifact: which reference implementation to copy, which patterns apply, what not to do | every time you build |
+| **`evidence-poet-builder`** (this skill) | **Builder's guide** — given Evidence Poet is the target language, how to actually construct an artifact: which reference implementation to copy, which patterns apply, what not to do | every time you build |
 
 Install first (if the project hasn't got the spec), then build. They compose.
 
@@ -29,18 +29,18 @@ Install first (if the project hasn't got the spec), then build. They compose.
 
 ## When to run
 
-Trigger on explicit intent to build something new in DNA1:
+Trigger on explicit intent to build something new in Evidence Poet:
 
-- "build a [component / page / tool / diagram / review HTML] in DNA1"
-- "用 DNA1 建一个 [...]"
-- "make a DNA1-styled [...]"
-- "/build-dna1"
+- "build a [component / page / tool / diagram / review HTML] in Evidence Poet"
+- "用 Evidence Poet 建一个 [...]"
+- "make an Evidence Poet-styled [...]"
+- "/build-epds"
 
 Do **not** trigger for:
 - General frontend questions ("how do I center a div")
 - Design critique / feedback on existing work
 - Merely installing the spec into a project → use `evidence-poet-installer`
-- Generating SVG diagrams as a one-off → use `visual-asset-generator` (it already encodes DNA1)
+- Generating SVG diagrams as a one-off → use `visual-asset-generator` (it already encodes Evidence Poet)
 - Non-visual work
 
 ---
@@ -49,10 +49,10 @@ Do **not** trigger for:
 
 ### Step 1 · Read the spec
 
-Read `references/dna1-spec.md` — the canonical DNA1 token source (framework-agnostic ·
+Read `references/spec.md` — the canonical Evidence Poet token source (framework-agnostic ·
 §0 JSON machine-readable + §1+ semantics). Lock these four before writing any code:
 
-- **`borderRadius: 0` globally** — sharp corners are a DNA1 signature. Never round a corner.
+- **`borderRadius: 0` globally** — sharp corners are an Evidence Poet signature. Never round a corner.
   **Write the literal `border-radius: 0` (or omit it entirely) — do NOT create a `--radius`
   token. Even `--radius: 0` + `border-radius: var(--radius)` reads as *parameterized* rounding
   and fails Guardrail A (the indirection defeats the static "always 0" guarantee).**
@@ -103,9 +103,9 @@ patterns, do not reinvent. If the build is a hybrid, read the two closest scenar
 
 ### Step 4 · Honor the anti-patterns
 
-Read `references/anti-patterns.md` before writing code. The four DNA1 guardrails (A–D)
+Read `references/anti-patterns.md` before writing code. The four Evidence Poet guardrails (A–D)
 and the user-strict rules (0 emoji · 0 rounded corners · no decorative shadows) are
-non-negotiable. Most framework defaults (rounded corners, drop shadows) violate DNA1 —
+non-negotiable. Most framework defaults (rounded corners, drop shadows) violate Evidence Poet —
 override them explicitly.
 
 ### Step 5 · Propose architecture before coding
@@ -135,18 +135,18 @@ Auditor exit codes:
 - `1` — fix P0/P1 violations and re-run
 - `2` — setup error (spec missing, bad args)
 
-**This completes the spec + distribution + verification triad**: spec lives in `dna1-spec.md` (canonical) · this builder skill is distribution (apply-time, BP-aware) · auditor is verification (post-build, spec-only). Without Step 7, builder declarations of "done" are unverified.
+**This completes the spec + distribution + verification triad**: spec lives in `spec.md` (canonical) · this builder skill is distribution (apply-time, BP-aware) · auditor is verification (post-build, spec-only). Without Step 7, builder declarations of "done" are unverified.
 
 ---
 
 ## Reference files
 
-- **`references/dna1-spec.md`** — canonical DNA1 token spec. §0 JSON (machine-readable) ·
+- **`references/spec.md`** — canonical Evidence Poet token spec. §0 JSON (machine-readable) ·
   §1–11 color / type / components / layout / motion / guardrails / agent prompt guide.
 - **`references/application-scenarios.md`** — the four consumer scenarios, each with its
   reference implementation, when-to-use criteria, reusable patterns, and a vanilla↔React
   translation guide.
-- **`references/anti-patterns.md`** — DNA1 guardrail violations + user-strict rules +
+- **`references/anti-patterns.md`** — Evidence Poet guardrail violations + user-strict rules +
   extension governance. Read before writing code.
 
 ---
@@ -155,6 +155,6 @@ Auditor exit codes:
 
 - Does not install the spec into a project → `evidence-poet-installer`
 - Does not generate SVG diagrams as a finished deliverable → `visual-asset-generator`
-- Does not refactor existing non-DNA1 code to comply
+- Does not refactor existing non-Evidence Poet code to comply
 - Does not run package managers, build, or deploy
-- Does not make product / content decisions — only how to render them in DNA1
+- Does not make product / content decisions — only how to render them in Evidence Poet
