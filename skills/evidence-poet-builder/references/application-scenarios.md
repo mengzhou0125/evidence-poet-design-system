@@ -97,146 +97,29 @@ runs it, no npm install. Bind `0.0.0.0` for LAN access; a canonical JSON file ac
 
 ## Scenario C · SVG diagram
 
-**When**: vector content — architecture diagrams, flow charts, decision matrices,
-concept-framework figures, portfolio card covers.
+**When**: vector content — architecture diagrams, flow charts, decision matrices, hierarchy trees, comparison figures, concept-framework figures.
 
-**Reference implementation**: the [`svg-diagram-skill`](https://github.com/mengzhou0125/svg-diagram-skill)
-— a standalone Claude skill (separate repo) that is the depth-specialist for the SVG
-diagram surface (chart-type taxonomy TYPE A–F · Python-list generation method · validation
-pipeline · pluggable spec with DNA1 bundled as default). If you are generating a finished
-standalone diagram, **install and use that skill directly** instead of hand-building. Build
-SVG by hand from this scenario only when the diagram is embedded in a larger build this
-skill is producing.
+**Use the [`svg-diagram-skill`](https://github.com/mengzhou0125/svg-diagram-skill) — install and trigger directly.** It's a standalone Claude skill (separate repo · MIT) that is the depth-specialist for this surface: TYPE A–F chart taxonomy + Python-list generation method + validation pipeline + pluggable spec (DNA1 bundled as default). **This builder does not reproduce that depth** — for any standalone SVG diagram, install the skill rather than hand-building from this scenario.
 
 ```bash
 git clone https://github.com/mengzhou0125/svg-diagram-skill && cd svg-diagram-skill && ./install.sh
 ```
 
-**How DNA1 applies in SVG**:
-1. Embed the three fonts in `<defs><style>@import url(...)</style></defs>` (or fall back
-   to Georgia / Arial / Courier New for offline / PDF embedding).
-2. Every `<rect>` is `rx="0" ry="0"` — sharp corners, no exceptions.
-3. Colors are the §0 JSON values directly (SVG has no CSS custom properties in all renderers).
-4. No `<feDropShadow>`, no `<linearGradient>`, no decorative effects.
-5. Arrowheads = solid `<polygon>` triangles. Connector lines 1.5px; dividers 1px.
-6. Gold `#C8A84B` 3px solid line marks only the 1–2 most important paths — never decoration.
-
-**Reusable patterns**:
-- **Vertical spacing tokens** — a small fixed scale (tight / compact / section / major /
-  margin), referenced as named constants in generation code, never as magic numbers.
-- **Canvas sizing top-down** — compute the core content width first; canvas width is its
-  derivative; height accumulates from content. Never fix the canvas then bump it.
-- **`foreignObject` for any wrapping prose** — long text uses `<foreignObject>` + an HTML
-  `<div>` so it reflows; only short single-line labels use `<text>`.
+If you must hand-build an SVG inline (e.g. an SVG embedded in a Scenario A React component this skill is producing), the four non-negotiable rules from DNA1 Guardrails are: sharp corners (`rx="0"` everywhere) · three fonts only (Playfair serif · Plus Jakarta sans · DM Mono — embedded in `<defs><style>@import …</style></defs>`) · colors come from `dna1-spec.md` §0 JSON values directly (SVG has no CSS variable support across renderers) · gold `#C8A84B` 3px solid line marks at most 1–2 important paths, never decoration. For canvas sizing, vertical spacing scale, chart-type layouts, theme switching, and validation — install the skill.
 
 ---
 
 ## Scenario D · Content-review HTML
 
-**When**: building an HTML surface to review a document — proposed text changes plus
-rationale annotations side-by-side, or AI-review flags against existing content.
+**When**: building an HTML surface to review a document — proposed text changes plus rationale annotations side-by-side, or AI-review flags against existing content.
 
-**Reference implementation**: the [`html-review-skill`](https://github.com/mengzhou0125/html-review-skill)
-— a standalone Claude skill (separate repo) that is the depth-specialist for the
-content-review surface (2 layout archetypes · 2 tag profiles · multi-layer review roles ·
-DIFF mode · CJK font discipline · feedback collector · pluggable spec with DNA1 bundled
-as default). If you are producing a finished review HTML, **install and use that skill
-directly** instead of hand-building from this scenario. The condensed walkthrough below is
-for inline review-HTML chunks embedded inside a larger build this skill is producing, or
-as quick reference when the dedicated skill isn't installed.
+**Use the [`html-review-skill`](https://github.com/mengzhou0125/html-review-skill) — install and trigger directly.** It's a standalone Claude skill (separate repo · MIT) that is the depth-specialist for this surface: 2 layout archetypes (right-rail · stacked) + 2 tag profiles (editorial 3×4 · technical 3×3=9) + multi-layer review roles + DIFF mode + CJK font discipline + feedback collector + pluggable spec (DNA1 bundled as default). **This builder does not reproduce that depth** — for any review HTML, install the skill rather than hand-building from this scenario.
 
 ```bash
 git clone https://github.com/mengzhou0125/html-review-skill && cd html-review-skill && ./install.sh
 ```
 
-**How DNA1 applies to review HTML** (build directly from this scenario · no separate framework to copy):
-1. Copy the DNA1 base tokens verbatim (same as Scenario B · from `dna1-spec.md` §0).
-2. Add review-semantic **extension** tokens — namespaced `--review-*` / `--audit-*` — for status, layer, and severity (definitions below). Every extension token carries an inline WCAG rationale (per spec §"Extension governance" rule 2).
-3. Import the three fonts — and **build CJK-safe stacks**: review-HTML status/layer tags are often Chinese (`改` / `删` / `D 精简`) and render in *mono*, so the **mono and serif stacks MUST include a CJK font first** among fallbacks (`'DM Mono', 'Microsoft YaHei', monospace` · `'Playfair Display', 'Microsoft YaHei', serif`) or Windows renders Traditional glyphs (per `dna1-spec.md` §3 "CJK / i18n font fallback"). Tip: define `--font-sans/serif/mono` once in `:root` and reference `var(--font-*)` everywhere, so the stack can't drift per-rule. Sharp corners everywhere (`border-radius: 0` global reset).
-4. Layout — **pick ONE of two archetypes** (both share a left ToC + per-section feedback; they differ only in *where the annotations sit*):
-   - **(A) right-rail** — main content column + a sticky annotation rail on the right; per-section feedback at the bottom of the rail. Best when annotations read beside the content (case study · doc revision · narrative).
-   - **(B) ToC + stacked** — a left sticky table-of-contents nav + single-column sections; each section's annotations stack *under* its content, with feedback at the bottom of the stack. Best for long technical / spec / architecture reviews (10+ sections · jump-nav matters).
-   Separate sections with 1px horizontal dividers.
-
-**Tag system (BP rule · 2 profiles · pick per use case)**:
-
-> **Two coexisting tag schemas** — pick per use case (editorial vs technical).
-
-### Profile A · Editorial review (for case study · doc revision · narrative content)
-
-Schema: **3 status × 4 layer = 12 combos**, plus 3-level audit-box severity gradient (informational only).
-
-| Status (action type · 3 values) | Layer (design dimension · 4 values) |
-|---|---|
-| **改** · modified (gold-dark #7E6720) | **A 故事** · capability signal / story arc (cool blue #3D5C73) |
-| **原** · kept original (gray #717171) | **B 分层** · body ↔ caption layering (olive #5E5840) |
-| **删** · deleted (terracotta #A85F4D) | **C 去拉踩** · remove ego / soften absolutes (plum #6A4A6E) |
-| | **D 精简** · density / dedup / shorten (slate #4A4A45) |
-
-Audit-box severity gradient (separate · informational): `--audit-severity-high/mid/low`.
-
-CSS classes: `.change-tag` (status) · `.r-tag.layer-a/b/c/d` (layer) · `.audit-box .sev-high/mid/low` (audit-box severity).
-
-### Profile B · Technical review (for code · spec · architecture · cross-layer audit)
-
-Schema: **3 axes × 3 variants = 9 distinct colors**. Each finding carries up to 3 tags (one per axis).
-
-| Status (warm) | Layer (cool/earth) | Severity (grayscale) |
-|---|---|---|
-| **REV** revise (blue-gray #527590) | **A** spec-internal (forest green #5A7A5A) | **P0** must (ink #1A1A18) |
-| **KEPT** approve (gold-dark #7E6720) | **B** cross-layer (plum #7C5A7A) | **P1** should (mid #555555) |
-| **DEL** remove (terracotta #A85F4D) | **C** style/wording (slate teal #4E7A85) | **P2** note (light #717171) |
-
-CSS classes: `.tech-tag.tech-status-rev/kept/del` · `.tech-tag.tech-layer-a/b/c` · `.tech-tag.tech-sev-p0/p1/p2`.
-
-### Rules when building a review HTML (both profiles)
-
-- Pick profile first (editorial vs technical) before laying out tags
-- Each color extension token gets an inline `/* WCAG <ratio>:1 <text-color-on-this> */` comment
-- Profile A: warm-status × cool-layer · severity is separate audit-box gradient
-- Profile B: warm-status · cool/earth-layer · achromatic-severity (asymmetry is the visual signal that severity is orthogonal to chromatic axes)
-
-**Why this is a BP rule not a spec rule** (architectural note): this 2-profile tag system is an **extension** (per `design.md` §"Extension governance") · not part of the canonical spec §0. It lives here in builder Scenario D (apply-time guidance) · not in `design.md` (spec authority). Per §"Extension governance" rule 5, extensions promote to spec only when multiple consumers converge. **The evidence-poet-auditor does NOT check tag orthogonality** (would be auditor-enforcing-an-extension-instead-of-spec). Builder enforces at create-time; visual review catches post-edit drift.
-
-### Extension token definitions (copy into your review HTML's `<style>` `:root`)
-
-Canonical review-semantic extensions · namespaced + WCAG-commented per §"Extension governance". Base DNA1 tokens come from `dna1-spec.md` §0 (copy verbatim, same as Scenario B); the block below is the review-specific *addition*.
-
-```css
-:root {
-  /* ── Profile A · editorial · Status (改/原/删) ── */
-  --review-modified-fill: #7E6720;  /* gold-dark · WCAG 5.5:1 white-on · = §0 promotedExtensions.accentDark */
-  --review-kept-fill:     #717171;  /* neutral gray · WCAG 4.6:1 white-on */
-  --review-deleted-fill:  #A85F4D;  /* terracotta · WCAG 4.8:1 white-on · no DNA1 base equivalent */
-  --review-modified-light: #F8F2E0; /* outlined-card tint · WCAG 11.8:1 ink-on */
-  --review-deleted-light:  #F3EAE7; /* outlined-card tint · WCAG 11.4:1 ink-on */
-
-  /* ── Profile A · editorial · Layer (A 故事 / B 分层 / C 去拉踩 / D 精简) ── */
-  --review-layer-a: #3D5C73;  --review-layer-b: #5E5840;  --review-layer-c: #6A4A6E;  --review-layer-d: #4A4A45;
-
-  /* ── audit-box severity gradient (informational · NOT a tag axis) ── */
-  --audit-severity-high: var(--review-deleted-fill);  --audit-severity-mid: #7E6720;  --audit-severity-low: #5A8A5A;
-
-  /* ── Profile B · technical · 3 axes × 3 variants (9 colors) ── */
-  --review-tech-status-rev:  #527590;  --review-tech-status-kept: #7E6720;  --review-tech-status-del:  #A85F4D;
-  --review-tech-layer-a:     #5A7A5A;  --review-tech-layer-b:     #7C5A7A;  --review-tech-layer-c:     #4E7A85;
-  --review-tech-severity-p0: #1A1A18;  --review-tech-severity-p1: #555555;  --review-tech-severity-p2: #717171;
-}
-```
-
-All tags: filled mono-uppercase chips · `font-size` ~10px · `letter-spacing: 0.06em` · white text on the fills above · `border-radius: 0`.
-
-**Reusable component patterns** (build in prose · same depth as Scenarios A/B):
-- **Section-pair grid** — `display: grid` · main content (left, flexible) + sticky review notes (right, ~480px) · 1px warm-border divider between pairs
-- **Status / layer / severity tags** — filled mono-uppercase chips per CSS classes above
-- **Audit-box** — informational panel · cool-blue-gray left accent (`border-left: 3px solid var(--color-cta-muted)`) · distinct from status colors (information ≠ change)
-- **Before/after compare blocks** — coral-tint "before" (`--review-deleted-light`) · gold-tint "after" (`--review-modified-light`) · gold = proposed change
-- **Left ToC nav** — sticky left column (`~240px`) of `<a href="#section-id">` anchors + `html { scroll-behavior: smooth }`; collapses to a top band on narrow screens. Both archetypes use it.
-- **Per-section feedback + copy-all** — for reviews where the user rates each section: give each section a feedback block (a label + `✓ approve` / `⚠ revise` / `✗ reject` checkboxes + a notes `<textarea>`), at the bottom of that section's annotations. Add ONE fixed **"📋 Copy all feedback"** button — a small self-contained `<script>` IIFE that walks every feedback block, serializes section-label + checked ratings + notes + a summary tally, and writes the digest to the clipboard, so the user pastes one block into chat and the AI continues revising. **The page saves no data** (ephemeral DOM · serialize-on-demand · no localStorage / backend).
-- **Clean state** — dashed low-contrast box "section reviewed · no flags" so reviewed-fine reads differently from unreviewed
-- **DIFF mode** — re-reviewing an edited doc: section-level change tags (NEW / EDITED / RESTRUCTURED / UNCHANGED) · changed sections get gold tint + changebar · unchanged collapse to one line
-
-**Working examples to model on** (illustrations · not required dependencies): any Pass A review HTML in your case-study `_review/` folders (Profile A) · any multi-layer architecture review HTML (Profile B). The pattern is fully specified above.
+If you must hand-build a review HTML chunk inline (e.g. embedded inside a Scenario A React app), the four non-negotiable rules are: `<html lang="zh-Hans-CN">` for any CJK content (**NOT `zh-CN`** — the `Hans` script subtag is required or Windows renders Han-unified codepoints as Traditional glyphs · this is a recurring failure mode) · CJK-safe font stacks with `Microsoft YaHei` placed first in the CJK fallback chain across all three font roles (define `--font-sans/serif/mono` once in `:root` and reference `var(--font-*)` everywhere · the single source can't re-diverge per-rule) · sharp corners global reset (`* { border-radius: 0 }`) · DNA1 base tokens from `dna1-spec.md` §0 plus review-extension tokens namespaced `--review-*` / `--audit-*` with inline WCAG rationale per `dna1-spec.md` §"Extension governance". For full archetype CSS, tag profile schemas (Profile A editorial 3 status × 4 layer · Profile B technical 3 axes × 3 variants), feedback-collector implementation, DIFF mode mechanisms, and review-role taxonomy — install the skill.
 
 ---
 
