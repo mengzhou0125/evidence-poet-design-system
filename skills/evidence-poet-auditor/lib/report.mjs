@@ -60,6 +60,47 @@ export function reportTerminal(violations, ctx) {
   console.log(COLOR.bold(`✗ FAIL · ${violations.length} violations (${parts.join(' · ')}) across ${Object.keys(byFile).length} files`));
 }
 
+// Plain-language summary · for humans / CI logs / quick reads.
+// Same data as reportTerminal, but no ANSI color and phrased as sentences + grouped fixes.
+export function reportSummary(violations, ctx) {
+  const { cwd, filesScanned } = ctx;
+  if (!violations.length) {
+    console.log('PASS · No design-spec violations found. Nothing to fix.');
+    return;
+  }
+  const counts = { P0: 0, P1: 0, P2: 0 };
+  for (const v of violations) counts[v.severity] = (counts[v.severity] || 0) + 1;
+  const fileCount = new Set(violations.map(v => v.path)).size;
+
+  const parts = [];
+  if (counts.P0) parts.push(`${counts.P0} must-fix (P0)`);
+  if (counts.P1) parts.push(`${counts.P1} should-fix (P1)`);
+  if (counts.P2) parts.push(`${counts.P2} note (P2)`);
+  console.log(`Scanned ${filesScanned} file(s). Found ${violations.length} issue(s): ${parts.join(' · ')}, across ${fileCount} file(s).\n`);
+
+  const fmt = v => {
+    const loc = `${relative(cwd, v.path)}:${v.line}`;
+    const val = v.value ? ` (${v.value})` : '';
+    const fix = v.suggestion ? ` → fix: ${v.suggestion}` : '';
+    return `  · ${loc} — ${v.message}${val}${fix}`;
+  };
+
+  const p0 = violations.filter(v => v.severity === 'P0');
+  const p1 = violations.filter(v => v.severity === 'P1');
+  if (p0.length) {
+    console.log('MUST FIX (P0 — breaks the design language; fix before commit):');
+    for (const v of p0) console.log(fmt(v));
+    console.log('');
+  }
+  if (p1.length) {
+    console.log('SHOULD FIX (P1):');
+    for (const v of p1.slice(0, 12)) console.log(fmt(v));
+    if (p1.length > 12) console.log(`  …and ${p1.length - 12} more P1 (use --format=terminal for the full list)`);
+    console.log('');
+  }
+  if (counts.P2) console.log(`Plus ${counts.P2} P2 note(s) (low priority · --format=terminal or =json for detail).`);
+}
+
 export function reportJSON(violations, ctx) {
   const out = {
     auditor: 'evidence-poet-auditor',

@@ -142,7 +142,7 @@ So three install patterns work cleanly:
 ## Spec mirror sync
 
 The Evidence Poet spec lives canonically at `skills/evidence-poet-installer/reference/design.md`.
-The `builder` skill bundles a mirror at `skills/evidence-poet-builder/references/spec.md`
+The `builder` skill bundles a mirror at `skills/evidence-poet-builder/references/dna1-spec.md`
 so it's self-contained.
 
 ```bash

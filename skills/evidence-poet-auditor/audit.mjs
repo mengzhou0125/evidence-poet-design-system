@@ -23,7 +23,8 @@
 // Options:
 //   --spec=<path>                  Path to design.md (default: ./.claude/design.md in cwd)
 //   --profiles=<dir>               Path to surface-profiles/ (default: ./surface-profiles)
-//   --format=terminal|json|html    Output format (default: terminal)
+//   --format=terminal|json|html|summary   Output format (default: terminal)
+//                                  summary = plain-language, no color · for CI logs / humans
 //   --surface=<name>               Force a specific surface profile (skip detection)
 //   --auto-classify                On unknown surface, auto-classify by content sniff
 //   --strict-unknown               On unknown surface, run Layer 1+2 strictly, flag all extensions
@@ -41,7 +42,7 @@ import { fileURLToPath } from 'node:url';
 import { loadSpec } from './lib/spec.mjs';
 import { walk, stripComments, readFile } from './lib/walker.mjs';
 import { loadProfiles, detectProfile, autoClassify } from './lib/profile.mjs';
-import { reportTerminal, reportJSON, reportHTML } from './lib/report.mjs';
+import { reportTerminal, reportJSON, reportHTML, reportSummary } from './lib/report.mjs';
 
 // All dimension modules
 import * as dim01 from './lib/dimensions/01-hex-canonical.mjs';
@@ -70,7 +71,7 @@ for (const a of args) {
   opts[k] = v === undefined ? true : v;
 }
 if (!targetPath) {
-  console.error('Usage: node audit.mjs <path-to-audit> [--format=terminal|json|html] [--spec=<path>] [...]');
+  console.error('Usage: node audit.mjs <path-to-audit> [--format=terminal|json|html|summary] [--spec=<path>] [...]');
   process.exit(2);
 }
 
@@ -195,6 +196,7 @@ const reportCtx = {
 
 if (format === 'json') reportJSON(allViolations, reportCtx);
 else if (format === 'html') reportHTML(allViolations, reportCtx);
+else if (format === 'summary') reportSummary(allViolations, reportCtx);
 else reportTerminal(allViolations, reportCtx);
 
 // Exit code logic (refined 2026-05-26 per Layer 4 review §1 P2):

@@ -1,4 +1,4 @@
-<!-- EPDS-DIRECTIVE-START -->
+<!-- DNA1-DIRECTIVE-START -->
 ## Frontend design standard · DNA1 "Evidence Poet"
 
 This project's frontend implementation **must** follow the DNA1 design system. The canonical spec is at [`.claude/design.md`](.claude/design.md) (installed by the `evidence-poet-installer` skill).
@@ -53,5 +53,5 @@ This check is best-effort — if either file can't be read, skip the check and u
 
 ### Manual refresh
 
-To force-refresh this project's spec to the latest skill version: tell Claude `install Evidence Poet into this project` (or `/install-epds`). The skill compares versions and updates silently if newer.
-<!-- EPDS-DIRECTIVE-END -->
+To force-refresh this project's spec to the latest skill version: tell Claude `install DNA1 into this project` (or `/install-dna1`). The skill compares versions and updates silently if newer.
+<!-- DNA1-DIRECTIVE-END -->

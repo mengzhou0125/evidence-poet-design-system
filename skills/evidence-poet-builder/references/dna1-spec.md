@@ -13,6 +13,7 @@
 > - **Evidence Poet** / **EPDS** = the brand name and public-facing identity
 > Both refer to the same spec. DNA1 stays as the internal/historical codename in this canonical file; the public surface (GitHub repos · skills · external READMEs) emphasizes "Evidence Poet" / "EPDS". Either name is correct in context.
 
+
 ---
 
 ## 0. Token Source (machine-readable)
@@ -22,6 +23,7 @@
 
 ```json
 {
+  "version": "1.1.0",
   "color": {
     "warmPaper": "#F8F7F3",
     "inkBlack": "#1A1A18",
