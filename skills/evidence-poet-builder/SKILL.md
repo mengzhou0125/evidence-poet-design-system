@@ -49,7 +49,7 @@ Do **not** trigger for:
 
 ### Step 1 · Read the spec
 
-Read `references/dna1-spec.md` — the canonical DNA1 token source (framework-agnostic ·
+Read `references/spec.md` — the canonical DNA1 token source (framework-agnostic ·
 §0 JSON machine-readable + §1+ semantics). Lock these four before writing any code:
 
 - **`borderRadius: 0` globally** — sharp corners are a DNA1 signature. Never round a corner.
@@ -135,13 +135,13 @@ Auditor exit codes:
 - `1` — fix P0/P1 violations and re-run
 - `2` — setup error (spec missing, bad args)
 
-**This completes the spec + distribution + verification triad**: spec lives in `dna1-spec.md` (canonical) · this builder skill is distribution (apply-time, BP-aware) · auditor is verification (post-build, spec-only). Without Step 7, builder declarations of "done" are unverified.
+**This completes the spec + distribution + verification triad**: spec lives in `spec.md` (canonical) · this builder skill is distribution (apply-time, BP-aware) · auditor is verification (post-build, spec-only). Without Step 7, builder declarations of "done" are unverified.
 
 ---
 
 ## Reference files
 
-- **`references/dna1-spec.md`** — canonical DNA1 token spec. §0 JSON (machine-readable) ·
+- **`references/spec.md`** — canonical DNA1 token spec. §0 JSON (machine-readable) ·
   §1–11 color / type / components / layout / motion / guardrails / agent prompt guide.
 - **`references/application-scenarios.md`** — the four consumer scenarios, each with its
   reference implementation, when-to-use criteria, reusable patterns, and a vanilla↔React

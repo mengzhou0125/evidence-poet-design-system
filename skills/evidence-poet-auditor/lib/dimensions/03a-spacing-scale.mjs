@@ -72,9 +72,18 @@ export function check(file, ctx) {
     text = text.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, m => m.replace(/[^\n]/g, ' '));
   }
 
+  // Documented sub-scale exception (design.md §5): tight badge / chip / tag components may
+  // use 1–2px off-scale padding when the declaration line carries the spec-sanctioned marker
+  // `/* sub-scale: tight badge */`. Comments are stripped in `text`, so detect the marker on the
+  // matching ORIGINAL line (stripComments preserves newlines, so line indices align 1:1). This is
+  // narrow on purpose — only the exact documented marker exempts, no blanket off-scale allowance.
+  const originalLines = file.original.split('\n');
+  const SUBSCALE_MARKER_RE = /\/\*\s*sub-scale:\s*tight badge\s*\*\//i;
+
   const violations = [];
   const lines = text.split('\n');
   lines.forEach((line, i) => {
+    if (SUBSCALE_MARKER_RE.test(originalLines[i] || '')) return; // honor documented tight-badge exception
     let m;
     SPACING_RE.lastIndex = 0;
     while ((m = SPACING_RE.exec(line)) !== null) {

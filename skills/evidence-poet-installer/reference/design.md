@@ -469,7 +469,7 @@ DNA1 base tokens (§0 JSON) cover the visual language baseline. Specific consume
 
 **5 rules for adding extension tokens** (any consumer):
 
-1. **Namespace prefix is mandatory** — never collide with base. Use `--review-*` (review HTML) · `--bright-*` / `--tint-*` / `--ink-*` (env signals in pipeline tools) · `--severity-*` (cross-consumer severity) · `--<consumer>-*` for consumer-specific extensions.
+1. **Namespace prefix is mandatory** — never collide with base. Use `--review-*` (review HTML) · `--bright-*` / `--tint-*` / `--ink-*` (env signals in pipeline tools) · `--audit-severity-*` (audit-box severity gradient · the §0 `auditSeverityLow` promoted token + its high/mid siblings) · `--<consumer>-*` for consumer-specific extensions.
 2. **WCAG rationale inline** — for any color used with text on it · document contrast ratio. Example: `--color-accent-dark: #7E6720; /* derived darker gold · WCAG-AA pass (5.5:1 white-on-this) · for text-bearing gold */`.
 3. **Derivation explicit** — if extension derives from a base token (darken/lighten/alpha), state the lineage. Example: `--review-改-fill: var(--color-accent-dark);` not a raw hex.
 4. **Live with the consumer** — extension tokens go in the consumer's tokens file (e.g., `visual_review_html/tokens.css`), NOT in this `design.md` §0 JSON. §0 stays the baseline-only canonical.
@@ -479,7 +479,7 @@ DNA1 base tokens (§0 JSON) cover the visual language baseline. Specific consume
    - **Token rule** (e.g. `--severity-high: #X` value): require ≥2 consumers using the same hex for the same semantic role. "Convergence" = same value + same use case, not just similar names.
    - **Pattern rule** (e.g. "9-color orthogonal tag system" structure): require ≥2 consumers using the same structural pattern (axes, cardinality, semantic mapping). Pattern promotion is rarer than token promotion.
 
-   **Current status** (2026-05-26): 0 cross-consumer convergence promoted. `--severity-*` lives in `visual_review_html/tokens.css` only. `--color-accent-dark #7E6720` is a **candidate** for promotion (used in `visual_review_html/tokens.css` + `evidence-poet-builder` skill scenario D · per Layer 2 BP Review §X2).
+   **Current status** (reconciled 2026-06-17 · the prior "2026-05-26 · 0 promoted · accentDark=candidate" line was stale — it contradicted the §"Status / Signal extension" section added the same day): **8 extension tokens promoted** — see §"Status / Signal extension" below (`accentDark` + 6 review/layer colors + `auditSeverityLow` · cleared rule-5 ≥2-consumer convergence, the 2nd consumer being the 2026-06-04 EPDS repo-validation re-derivation · folded into §0 JSON `promotedExtensions`). **Still candidates** (1 consumer · await 2nd convergence): `auditSeverityHigh/Mid` + the non-converged review-layer colors — see the Candidate table below.
 
 **Anti-pattern · drift via approximation**: when adding a new consumer, NEVER eyeball hex values from memory. Copy verbatim from §0 JSON OR import `theme-dna1.css` / `visual_review_html/tokens.css`. Drift caught 2026-05-15 (my own review_html_workflow CSS skeleton drifted on `bg` / `gold` / `border` / `muted` / `dim` · all approximate · 0 WCAG rationale) · root cause was eyeballing. Fixed by 2026-05-16 promotion (BP doc canonical · sync-tokens.mjs §9 audit guard).
 

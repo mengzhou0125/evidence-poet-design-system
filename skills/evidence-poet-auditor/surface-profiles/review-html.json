@@ -9,7 +9,7 @@
     "contentSniff": ["section-pair", ".en-ref", "BUILD INVARIANTS", "card-box", "review-bg"]
   },
   "extensions": {
-    "allowedNamespaces": ["--review-", "--severity-", "--layer-", "--tag-", "--status-"],
+    "allowedNamespaces": ["--review-", "--audit-", "--severity-", "--layer-", "--tag-", "--status-"],
     "rule": "WCAG ratio comment required on each new --color-* extension (design.md §'Extension governance' rule 2)",
     "forbidden": ["extension token without WCAG ratio comment"],
     "requireCommentPattern": "WCAG \\d+\\.?\\d*:1",

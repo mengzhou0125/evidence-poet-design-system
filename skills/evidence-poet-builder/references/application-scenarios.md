@@ -1,6 +1,6 @@
 # DNA1 Application Scenarios
 
-DNA1 is framework-agnostic. The *spec* (`dna1-spec.md`) defines the design language;
+DNA1 is framework-agnostic. The *spec* (`spec.md`) defines the design language;
 this file defines **how the language applies** across four kinds of build. Each scenario
 points to a real reference implementation — copy its patterns rather than reinventing.
 
@@ -34,7 +34,7 @@ before/after sliders, lightboxes.
 1. Add `data-theme="dna1"` to `<html>`.
 2. All token overrides live in one file (`theme-dna1.css`) under `[data-theme="dna1"] :root { … }`.
 3. Components reference values via `var(--token-name)` — never inline a literal color / size.
-4. A sync script verifies the CSS variables stay aligned with `dna1-spec.md` §0 JSON.
+4. A sync script verifies the CSS variables stay aligned with `spec.md` §0 JSON.
 
 **Token → CSS-variable mapping** (the canonical naming · use these exact names):
 
@@ -74,8 +74,8 @@ local server.
 
 **How DNA1 applies in vanilla**:
 1. `<html data-theme="dna1">` works in vanilla too (or just apply tokens at `:root`).
-2. Copy the DNA1 tokens **verbatim** from `dna1-spec.md` §0 into the `<style>` `:root` block.
-   Mark them with a comment: `/* DNA1 tokens · verbatim from dna1-spec.md §0 */`.
+2. Copy the DNA1 tokens **verbatim** from `spec.md` §0 into the `<style>` `:root` block.
+   Mark them with a comment: `/* DNA1 tokens · verbatim from spec.md §0 */`.
 3. Import the three fonts via Google Fonts `<link>` in `<head>` (Playfair Display ·
    Plus Jakarta Sans · DM Mono).
 
@@ -129,9 +129,9 @@ SVG by hand only when the diagram is embedded in a larger build this skill is pr
 rationale annotations side-by-side, or AI-review flags against existing content.
 
 **How DNA1 applies to review HTML** (build directly from this scenario · no separate framework to copy):
-1. Copy the DNA1 base tokens verbatim (same as Scenario B · from `dna1-spec.md` §0).
+1. Copy the DNA1 base tokens verbatim (same as Scenario B · from `spec.md` §0).
 2. Add review-semantic **extension** tokens — namespaced `--review-*` / `--audit-*` — for status, layer, and severity (definitions below). Every extension token carries an inline WCAG rationale (per spec §"Extension governance" rule 2).
-3. Import the three fonts — and **build CJK-safe stacks**: review-HTML status/layer tags are often Chinese (`改` / `删` / `D 精简`) and render in *mono*, so the **mono and serif stacks MUST include a CJK font first** among fallbacks (`'DM Mono', 'Microsoft YaHei', monospace` · `'Playfair Display', 'Microsoft YaHei', serif`) or Windows renders Traditional glyphs (per `dna1-spec.md` §3 "CJK / i18n font fallback"). Tip: define `--font-sans/serif/mono` once in `:root` and reference `var(--font-*)` everywhere, so the stack can't drift per-rule. Sharp corners everywhere (`border-radius: 0` global reset).
+3. Import the three fonts — and **build CJK-safe stacks**: review-HTML status/layer tags are often Chinese (`改` / `删` / `D 精简`) and render in *mono*, so the **mono and serif stacks MUST include a CJK font first** among fallbacks (`'DM Mono', 'Microsoft YaHei', monospace` · `'Playfair Display', 'Microsoft YaHei', serif`) or Windows renders Traditional glyphs (per `spec.md` §3 "CJK / i18n font fallback"). Tip: define `--font-sans/serif/mono` once in `:root` and reference `var(--font-*)` everywhere, so the stack can't drift per-rule. Sharp corners everywhere (`border-radius: 0` global reset).
 4. Layout — **pick ONE of two archetypes** (both share a left ToC + per-section feedback; they differ only in *where the annotations sit*):
    - **(A) right-rail** — main content column + a sticky annotation rail on the right; per-section feedback at the bottom of the rail. Best when annotations read beside the content (case study · doc revision · narrative).
    - **(B) ToC + stacked** — a left sticky table-of-contents nav + single-column sections; each section's annotations stack *under* its content, with feedback at the bottom of the stack. Best for long technical / spec / architecture reviews (10+ sections · jump-nav matters).
@@ -179,7 +179,7 @@ CSS classes: `.tech-tag.tech-status-rev/kept/del` · `.tech-tag.tech-layer-a/b/c
 
 ### Extension token definitions (copy into your review HTML's `<style>` `:root`)
 
-Canonical review-semantic extensions · namespaced + WCAG-commented per §"Extension governance". Base DNA1 tokens come from `dna1-spec.md` §0 (copy verbatim, same as Scenario B); the block below is the review-specific *addition*.
+Canonical review-semantic extensions · namespaced + WCAG-commented per §"Extension governance". Base DNA1 tokens come from `spec.md` §0 (copy verbatim, same as Scenario B); the block below is the review-specific *addition*.
 
 ```css
 :root {
@@ -281,6 +281,6 @@ Most real builds are hybrids. Rules of thumb:
   (hero, card, sticky-scroll as semantic sections)
 - **Diagram inside a page** → Scenario C for the SVG + the host page's scenario for the frame
 
-The spec (`dna1-spec.md`) and the anti-patterns (`anti-patterns.md`) are constant across
+The spec (`spec.md`) and the anti-patterns (`anti-patterns.md`) are constant across
 every scenario and every hybrid. Only the *mechanism* (how tokens reach the element)
 changes.
