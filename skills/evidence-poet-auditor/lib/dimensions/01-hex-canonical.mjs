@@ -60,6 +60,9 @@ export function check(file, ctx) {
     if (isExtensionContext(sline, oline, c.col, profile)) continue;
 
     const near = nearestCanonical(c.normalized, spec.color.set);
+    // Auto-fix ONLY when the drift is a near-exact rounding/typo of a canonical token
+    // (Δ ≤ 2). Anything looser is a genuine color choice, not a drift — leave report-only.
+    const autoFixable = near && near.distance <= 2;
     violations.push({
       dimensionId: dimension.id,
       severity: 'P0',
@@ -71,6 +74,8 @@ export function check(file, ctx) {
       suggestion: near && near.distance <= 20
         ? `near ${near.value} (${spec.color.hexToName[near.value]} · Δ${near.distance.toFixed(1)})`
         : null,
+      // Structured, machine-applicable replacement for --fix (col-anchored exact-token swap).
+      fix: autoFixable ? { find: c.raw, replace: near.value, col: c.col } : undefined,
     });
   }
   return violations;

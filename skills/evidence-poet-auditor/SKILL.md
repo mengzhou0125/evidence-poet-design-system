@@ -80,12 +80,15 @@ Options:
 - `--dimensions=<id,id,...>` — run only specific dimensions
 - `--skip=<id,id,...>` — skip specific dimensions
 - `--define-profile=<name>` — interactive Q&A to create a new `surface-profiles/<name>.json` (used when artifact doesn't fit any existing surface type)
+- `--quiet` — silent on a clean pass (no output · exit 0). FAIL still prints. Used by the per-session self-check (see CLAUDE.md EPDS-DIRECTIVE §5) so the happy path is silent.
+- `--fix` — **review-gate auto-fix · dry-run by default** (prints a diff, writes nothing). Only high-certainty drifts are auto-fixable: dim #01 hex within Δ≤2 of a canonical token, and dim #08 non-canonical easing. Structural / ambiguous findings (spacing, type-role, WCAG, cross-surface, non-canonical fonts) stay report-only.
+- `--apply` — with `--fix`: actually write the proposed changes to disk. Intended flow: run `--fix` → review the dry-run diff → re-run with `--fix --apply`.
 
-## Exit codes (refined 2026-05-26 per Layer 4 review)
+## Exit codes (refined 2026-05-26 per Layer 4 review · --fix added 2026-07-02)
 
-- `0` — pass (no P0/P1 · P2-only OK)
+- `0` — pass (no P0/P1 · P2-only OK) · also a successful `--fix` dry-run or apply
 - `1` — P1 violations only (CI: should-fix · soft gate)
-- `2` — setup error (spec missing, bad args, file walk fails)
+- `2` — setup error (spec missing, bad args, file walk fails) · also a `--fix` write failure
 - `3` — P0 violations present (CI: must-fix · hard gate)
 
 CI usage: gate on exit `>= 3` for strict (P0 blocks) · gate on exit `>= 1` for any-fail policy.
@@ -115,7 +118,11 @@ When user invokes (via trigger phrases), Claude:
 1. Identifies the target path from user message
 2. Runs `node audit.mjs <path>` with default options
 3. Reports violations grouped by file + severity
-4. Asks user whether to fix any flagged drift manually (auto-fix `--fix` flag NOT implemented · future roadmap)
+4. Offers to fix flagged drift. For high-certainty drifts (hex Δ≤2 · non-canonical easing), run `--fix` (dry-run) to show the exact diff, then — **after the user approves** — re-run with `--fix --apply` to write. Structural / ambiguous findings (spacing, type-role, WCAG, cross-surface, fonts) have no auto-fix; propose a manual edit for those.
+
+### Per-session self-check (auto-trigger · added 2026-07-02)
+
+Beyond explicit invocation, the installed CLAUDE.md **EPDS-DIRECTIVE §5** now instructs Claude to run this auditor on the frontend files it changed before declaring done — `node ~/.claude/skills/evidence-poet-auditor/audit.mjs <changed> --quiet`. `--quiet` makes the happy path silent (PASS → no output, just continue); only drift surfaces, at which point Claude offers the `--fix` review-gate above. This replaces the older "trace tokens by eye" self-check with a real tool call.
 
 ## Source vs deployed
 

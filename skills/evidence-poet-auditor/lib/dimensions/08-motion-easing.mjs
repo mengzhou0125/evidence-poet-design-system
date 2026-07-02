@@ -40,6 +40,11 @@ export function check(file, ctx) {
             value: c,
             message: `Guardrail D · non-canonical easing (must be ${ctx.spec.easing})`,
             suggestion: ctx.spec.easing,
+            // Auto-fixable: swap the exact non-canonical cubic-bezier for the canonical one.
+            // No col (col points at the transition property, not the cubic) → located by string
+            // match in lib/fix.mjs. The keyword-easing P1 case below is intentionally NOT auto-fixed
+            // (replacing a bare `ease` keyword with a full cubic needs positional judgment).
+            fix: { find: c, replace: ctx.spec.easing },
           });
         }
       }

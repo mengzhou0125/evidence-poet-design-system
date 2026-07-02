@@ -31,10 +31,16 @@
 //   --dimensions=<id,id,...>       Only run specific dimensions (warns on unknown ids)
 //   --skip=<id,id,...>             Skip specific dimensions
 //   --define-profile=<name>        Interactive Q&A to author new surface-profiles/<name>.json
+//   --quiet                        Silent on a clean pass (no output, exit 0) · FAIL still prints.
+//                                  Used by the per-session self-check so the happy path is silent.
+//   --fix                          Review-gate auto-fix · DRY-RUN by default (prints a diff, writes
+//                                  nothing). Only high-certainty drifts (01-hex Δ≤2 · 08-easing);
+//                                  structural/ambiguous findings stay report-only.
+//   --apply                        With --fix: actually write the proposed changes to disk.
 // Exit codes:
-//   0 · pass (no P0/P1; P2-only passes)
+//   0 · pass (no P0/P1; P2-only passes) · also: successful --fix dry-run/apply
 //   1 · P1 violations only (CI: should fix)
-//   2 · setup error (spec missing, bad args, file walk fails)
+//   2 · setup error (spec missing, bad args, file walk fails) · also: --fix write failure
 //   3 · P0 violations present (CI: must fix · differentiated from P1 for blocking-gate logic)
 
 import { resolve, dirname, join } from 'node:path';
@@ -42,7 +48,8 @@ import { fileURLToPath } from 'node:url';
 import { loadSpec } from './lib/spec.mjs';
 import { walk, stripComments, readFile } from './lib/walker.mjs';
 import { loadProfiles, detectProfile, autoClassify } from './lib/profile.mjs';
-import { reportTerminal, reportJSON, reportHTML, reportSummary } from './lib/report.mjs';
+import { reportTerminal, reportJSON, reportHTML, reportSummary, reportFix } from './lib/report.mjs';
+import { runFixes } from './lib/fix.mjs';
 
 // All dimension modules
 import * as dim01 from './lib/dimensions/01-hex-canonical.mjs';
@@ -194,18 +201,41 @@ const reportCtx = {
   filesScanned: files.length,
 };
 
-if (format === 'json') reportJSON(allViolations, reportCtx);
-else if (format === 'html') reportHTML(allViolations, reportCtx);
-else if (format === 'summary') reportSummary(allViolations, reportCtx);
-else reportTerminal(allViolations, reportCtx);
+const p0 = allViolations.filter(v => v.severity === 'P0').length;
+const p1 = allViolations.filter(v => v.severity === 'P1').length;
+const isPass = p0 === 0 && p1 === 0;
+
+function emitReport() {
+  if (format === 'json') reportJSON(allViolations, reportCtx);
+  else if (format === 'html') reportHTML(allViolations, reportCtx);
+  else if (format === 'summary') reportSummary(allViolations, reportCtx);
+  else reportTerminal(allViolations, reportCtx);
+}
+
+// --fix review-gate (dry-run by default · --apply writes). Only the high-certainty dimensions
+// (01-hex Δ≤2 · 08-easing) attach a structured `fix`; structural/ambiguous findings stay
+// report-only. The user-consent step lives at the Claude/user layer: show the dry-run diff →
+// user approves → re-run with --apply.
+if (opts.fix) {
+  if (!(opts.quiet && isPass)) emitReport();  // context first, unless silent-pass
+  const fixableCount = allViolations.filter(v => v.fix).length;
+  const remaining = allViolations.length - fixableCount;
+  const result = runFixes(allViolations, { apply: !!opts.apply });
+  reportFix(result, { cwd: process.cwd(), dryRun: !opts.apply, remaining });
+  process.exit(result.files.some(f => f.error) ? 2 : 0);
+}
+
+// Happy-path silence: clean pass + --quiet → emit nothing, exit 0. (If checks threw errors the
+// pass isn't truly clean, so fall through and surface them.)
+if (opts.quiet && isPass && caughtDimErrors === 0) process.exit(0);
+
+emitReport();
 
 // Exit code logic (refined 2026-05-26 per Layer 4 review §1 P2):
 // 3 = P0 violations present (CI: must-fix gate)
 // 1 = P1 violations only (CI: should-fix · soft gate)
 // 0 = pass (no P0/P1 · P2-only OK) OR pass with caught dim errors (warned to stderr)
 // Plus: if dim functions silently threw errors but produced no P0/P1, still warn at end
-const p0 = allViolations.filter(v => v.severity === 'P0').length;
-const p1 = allViolations.filter(v => v.severity === 'P1').length;
 if (caughtDimErrors > 0) {
   console.error(`\n⚠  ${caughtDimErrors} dimension check(s) threw errors and were silently skipped · review stderr above. Audit results may be incomplete.`);
 }

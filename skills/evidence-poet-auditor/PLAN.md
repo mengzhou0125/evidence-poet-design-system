@@ -254,7 +254,7 @@ evidence-poet-auditor <path> --strict            # exit 1 on any P1+
 evidence-poet-auditor <path> --surface react     # only React-applicable checks
 evidence-poet-auditor <path> --format=html       # review-HTML output
 evidence-poet-auditor <path> --runtime           # enable browser-render checks (Dimension 11)
-evidence-poet-auditor <path> --fix               # auto-fix trivial drifts (hex literals only)
+evidence-poet-auditor <path> --fix               # SHIPPED 2026-07-02 · review-gate auto-fix (dry-run; --apply writes) · hex Δ≤2 + non-canonical easing only
 ```
 
 **Skill invocation** (Claude Code skill):

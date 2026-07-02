@@ -1,4 +1,4 @@
-<!-- DNA1-DIRECTIVE-START -->
+<!-- EPDS-DIRECTIVE-START -->
 ## Frontend design standard · DNA1 "Evidence Poet"
 
 This project's frontend implementation **must** follow the DNA1 design system. The canonical spec is at [`.claude/design.md`](.claude/design.md) (installed by the `evidence-poet-installer` skill).
@@ -19,7 +19,7 @@ Does **not** apply to: backend code, data pipelines, build tooling, non-visual d
    - **C · Color discipline (WCAG-bound)**: never use gold `#C8A84B` as text color (fails 2.14:1). Never use grays below `#717171` for body text.
    - **D · Motion restraint**: single easing `cubic-bezier(0.16, 1, 0.3, 1)`. No bounce/elastic/parallax/auto-play-without-disclosure.
 4. **Spacing** comes only from the 4px-rooted scale (§5): `4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48 / 64 / 80 / 120`. No arbitrary values.
-5. **Self-check before declaring done**: every color, font, border-radius, spacing, shadow, and easing value is traceable to a token in §0 JSON or a rule in §2/§3/§4/§5/§6/§9.
+5. **Self-check before declaring done — run the auditor, don't eyeball**: if `evidence-poet-auditor` is installed (`~/.claude/skills/evidence-poet-auditor/audit.mjs` exists), run it on the frontend files you changed: `node ~/.claude/skills/evidence-poet-auditor/audit.mjs <changed-paths> --quiet`. `--quiet` stays silent on a clean pass (the happy path is quiet — just continue); if it reports drift, resolve it before declaring done — offer the review-gate auto-fix (`--fix` shows a dry-run diff → `--fix --apply` writes after you approve) for hex/easing drifts, and propose manual edits for structural findings. If the auditor isn't installed, fall back to a manual trace: every color, font, border-radius, spacing, shadow, and easing value must trace to a token in §0 JSON or a rule in §2/§3/§4/§5/§6/§9.
 
 ### Quick reference (cheat sheet)
 
@@ -53,5 +53,5 @@ This check is best-effort — if either file can't be read, skip the check and u
 
 ### Manual refresh
 
-To force-refresh this project's spec to the latest skill version: tell Claude `install DNA1 into this project` (or `/install-dna1`). The skill compares versions and updates silently if newer.
-<!-- DNA1-DIRECTIVE-END -->
+To force-refresh this project's spec to the latest skill version: tell Claude `install Evidence Poet into this project` (or `/install-epds`). The skill compares versions and updates silently if newer.
+<!-- EPDS-DIRECTIVE-END -->

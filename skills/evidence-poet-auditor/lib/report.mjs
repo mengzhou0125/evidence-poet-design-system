@@ -101,6 +101,41 @@ export function reportSummary(violations, ctx) {
   if (counts.P2) console.log(`Plus ${counts.P2} P2 note(s) (low priority · --format=terminal or =json for detail).`);
 }
 
+// Render the --fix flow. dryRun=true (default) shows what WOULD change and writes nothing;
+// dryRun=false reports what was written. `remaining` = count of non-auto-fixable violations
+// (structural / ambiguous) that stay report-only.
+export function reportFix(result, { cwd, dryRun, remaining }) {
+  const { files, appliedTotal, skippedTotal } = result;
+
+  if (appliedTotal === 0 && skippedTotal === 0) {
+    console.log(COLOR.dim('\nNo auto-fixable drifts found (hex Δ≤2 / non-canonical easing).'));
+    if (remaining > 0) console.log(COLOR.dim(`${remaining} finding(s) remain report-only (structural / ambiguous — fix by hand).`));
+    return;
+  }
+
+  console.log(COLOR.bold(dryRun ? '\n--fix · dry-run (nothing written)' : '\n--fix · applied'));
+  for (const f of files) {
+    if (f.error) { console.log(`  ${COLOR.red('!')} ${relative(cwd, f.path)} · ${f.error}`); continue; }
+    if (!f.changedLines.length && !f.skipped.length) continue;
+    console.log(COLOR.bold(relative(cwd, f.path)) + (f.written ? COLOR.grn('  · written') : ''));
+    for (const ch of f.changedLines) {
+      console.log(`  ${COLOR.dim(ch.line + ':')}`);
+      console.log(`    ${COLOR.red('- ' + ch.before.trim())}`);
+      console.log(`    ${COLOR.grn('+ ' + ch.after.trim())}`);
+    }
+    for (const s of f.skipped) {
+      console.log(`  ${COLOR.yel('~ skipped')} ${COLOR.dim(s.v.line + ':' + s.v.col)} ${s.reason}`);
+    }
+  }
+
+  const tail = [];
+  tail.push(`${appliedTotal} fix(es) ${dryRun ? 'proposed' : 'applied'}`);
+  if (skippedTotal) tail.push(`${skippedTotal} skipped (line shifted since audit)`);
+  if (remaining > 0) tail.push(`${remaining} report-only (structural — fix by hand)`);
+  console.log(COLOR.bold(`\n${tail.join(' · ')}`));
+  if (dryRun && appliedTotal > 0) console.log(COLOR.dim('Re-run with `--fix --apply` to write these changes.'));
+}
+
 export function reportJSON(violations, ctx) {
   const out = {
     auditor: 'evidence-poet-auditor',
