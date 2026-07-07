@@ -40,7 +40,7 @@ Do **not** trigger for:
 - General frontend questions ("how do I center a div")
 - Design critique / feedback on existing work
 - Merely installing the spec into a project → use `evidence-poet-installer`
-- Generating SVG diagrams as a one-off → use `visual-asset-generator` (it already encodes DNA1)
+- Generating SVG diagrams as a one-off → use `svg-diagram-skill` (it already encodes DNA1)
 - Non-visual work
 
 ---
@@ -88,7 +88,7 @@ Read `references/spec.md` — the canonical DNA1 token source (framework-agnosti
 |---|---|---|---|
 | Narrative | React/TSX | in-app or own host | "in-app integration OR standalone host?" |
 | Data-dense | vanilla HTML/CSS/JS | static file or own host | "is this inside an existing React app?" (if yes → Scenario A+B hybrid) |
-| Diagram | SVG | embedded asset | "standalone SVG file or embedded in larger build?" (if standalone → suggest `visual-asset-generator` skill instead) |
+| Diagram | SVG | embedded asset | "standalone SVG file or embedded in larger build?" (if standalone → suggest `svg-diagram-skill` instead) |
 | Content-review | vanilla HTML (or React) | static file most common | "static file OR inside a React app?" |
 | Hybrid | depends — read 2 closest scenarios + merge | — | "what's the primary use case?" |
 
@@ -154,7 +154,7 @@ Auditor exit codes:
 ## What this skill does NOT do
 
 - Does not install the spec into a project → `evidence-poet-installer`
-- Does not generate SVG diagrams as a finished deliverable → `visual-asset-generator`
+- Does not generate SVG diagrams as a finished deliverable → `svg-diagram-skill`
 - Does not refactor existing non-DNA1 code to comply
 - Does not run package managers, build, or deploy
 - Does not make product / content decisions — only how to render them in DNA1

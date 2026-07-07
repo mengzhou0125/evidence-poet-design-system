@@ -101,6 +101,27 @@ hex from memory, with no WCAG rationale and no lineage. A consumer that does thi
 silently from the design language. Every value is either a canonical token or a governed,
 namespaced, documented extension. There is no third category.
 
+### Carry semantics via border-color / existing tokens — do NOT invent a fill hex
+
+The most common form of drift-via-approximation is **inventing a background tint** to make a
+callout / panel / status block "feel" distinct — eyeballing a `#eef3f4` / `#fcfbf8` that looks
+about right. Banned even when the tint is subtle. When a build needs to signal a semantic
+distinction (info panel vs warning panel · kept vs changed block) and the palette has no fill
+for it:
+
+- **First choice** — carry the distinction with a `border-left` / `border-color`, using an
+  existing token or a governed namespaced extension (`--audit-severity-*` · `--review-*`). A
+  colored edge reads as strongly as a fill and needs **no new background hex**. (This is exactly
+  how the review-HTML audit-box works: `border-left: 3px solid var(--color-cta-muted)`, flat bg.)
+- **If a fill is truly required** — it must be a governed extension: namespaced, inline WCAG
+  ratio comment, derivation stated. Never an eyeballed literal.
+
+Worked failure: a build invented `#eef3f4` / `#eef3ee` / `#fcfbf8` for
+three callout backgrounds instead of carrying the distinction on the border — zero of them had a
+namespace, a WCAG comment, or a lineage. Three silent drifts from one eyeball habit. (The same
+build also placed ~31 spacing values off the 4px scale — see rule 4 / self-check: trace every
+spacing value to the scale table, don't eyeball, and let auditor dim #3a catch what you miss.)
+
 ---
 
 ## Additional spec-derived rules (added 2026-05-26 per Layer 3 review §X1 propagation)
@@ -182,6 +203,7 @@ Updated 2026-05-26 to mirror auditor 12 dimensions (was 9 items · now 13). Item
 - [ ] Three fonts, roles not reversed (serif heading · sans body · mono label/tag)  `[dim #4 + #5]`
 - [ ] Zero emoji — status signals use CSS swatch + text  `[builder-only · no dim]`
 - [ ] Zero hardcoded hex/px/font outside tokens (or governed namespaced extensions)  `[dim #1 + #3a + #4]`
+- [ ] No invented fill-tint hex for callouts/panels — semantic distinction carried via border-color or a governed extension  `[dim #1 + #12]`
 - [ ] Gold used only on accent lines / active states — never as text, never decorative  `[dim #7]`
 - [ ] Shadows only on hover or explicit featured state — default state flat  `[dim #9]`
 - [ ] Motion uses single easing curve + named duration — no bounce / parallax / silent autoplay  `[dim #8]`

@@ -10,6 +10,8 @@
 // Tag orthogonality enforcement moved to `evidence-poet-builder` skill (review-html scenario)
 // where build-time pattern generation is the right authority for BP conventions.
 
+import { normalizeColor } from '../spec.mjs';
+
 const CSS_VAR_DEF_RE = /--([a-zA-Z0-9_-]+)\s*:\s*([^;}\n]+)/g;
 
 export const dimension = {
@@ -50,6 +52,15 @@ export function check(file, ctx) {
           // Only flag if value is a color (other extensions like --hairline: 1px are out of #12 scope)
           const isColorExt = /#[0-9a-f]{3,8}|rgb|hsl/i.test(value);
           if (isColorExt) {
+            // Standalone single-file surfaces (profile.extensions.inlineBaseTokens) inline the base
+            // palette with short names (--bg / --ink / --gold) instead of importing a theme file. A
+            // token holding a CANONICAL spec color is a base token, not a rogue unnamespaced
+            // extension — don't flag it (a real-world case · 16 P1 false-positives). Non-
+            // canonical inline hex still flags (real drift · also caught by dim-01).
+            if (ext.inlineBaseTokens && ctx.spec?.color?.set) {
+              const hexM = value.match(/#[0-9a-fA-F]{3,8}/);
+              if (hexM && ctx.spec.color.set.has(normalizeColor(hexM[0]))) continue;
+            }
             violations.push({
               dimensionId: dimension.id,
               severity: 'P1',

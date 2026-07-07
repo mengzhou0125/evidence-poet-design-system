@@ -14,8 +14,8 @@
     "forbidden": ["extension token without WCAG ratio comment"],
     "requireCommentPattern": "WCAG \\d+\\.?\\d*:1",
     "_bpReference": {
-      "note": "tag orthogonality (2 profiles · editorial 3x4 / technical 3x3) is an extension pattern, NOT a spec rule · enforcement is at build-time (builder skill), not audit-time",
-      "doc": "evidence-poet-builder/references/application-scenarios.md · Scenario D (tag profiles + extension-token definitions inline)"
+      "note": "tag orthogonality (2 profiles · editorial 3x4 / technical 3x3) is an extension pattern, NOT a spec rule · enforcement is at build-time (html-review-skill), not audit-time",
+      "doc": "html-review-skill/references/tag-profiles.md (canonical authority · builder Scenario D is a stub that defers here since the 2026-06-09 3-repo split)"
     }
   },
   "thresholds": {

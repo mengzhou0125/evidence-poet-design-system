@@ -1,0 +1,31 @@
+{
+  "name": "review-html-standalone",
+  "label": "Review HTML (standalone single-file)",
+  "_specSource": "Variant of review-html for SELF-CONTAINED single-file review HTML — one .html that inlines its own base palette + tokens in a <style> block instead of importing a shared theme file. Same spec roots as review-html (design.md §5 Density Floors · §'Extension governance' · §3 CJK fallback).",
+  "_usage": "OPT-IN profile · does not auto-detect over normal review-html to avoid detection collision. Select it either by naming the file `*.standalone.html` / `*_standalone.html` (auto-detected by filePattern) OR by forcing it: `node audit.mjs foo.html --surface=review-html-standalone`. Use this whenever a review HTML defines its base tokens (--bg / --ink / --gold / --border ...) inline rather than via an imported theme — otherwise dim-12 mis-reads those inline base tokens as unnamespaced extensions (a real-world case · 16 P1 false-positives).",
+  "requireCjkFallback": true,
+  "_cjkRule": "Same as review-html: review-HTML status/layer tags render CN in MONO · var(--font-*) tokens trusted. Spec root: design.md §3 'CJK / i18n font fallback'.",
+  "detect": {
+    "filePattern": ["**/*.standalone.html", "**/*_standalone.html"],
+    "contentSniff": ["section-pair", ".en-ref", "BUILD INVARIANTS", "card-box", "review-bg"]
+  },
+  "extensions": {
+    "allowedNamespaces": ["--review-", "--audit-", "--severity-", "--layer-", "--tag-", "--status-"],
+    "inlineBaseTokens": true,
+    "rule": "WCAG ratio comment required on each new --color-* extension (design.md §'Extension governance' rule 2). Base palette tokens (--bg / --ink / --gold / --border ...) defined inline with CANONICAL spec colors are treated as base tokens, not extensions — see inlineBaseTokens.",
+    "forbidden": ["extension token without WCAG ratio comment"],
+    "requireCommentPattern": "WCAG \\d+\\.?\\d*:1",
+    "_inlineBaseTokensNote": "When true, dim-12 does NOT flag an unnamespaced color var as an extension IF its value is a canonical spec color (design.md §0 palette). Inline base tokens holding canonical hex = base, not rogue extension. Non-canonical inline hex is still flagged (real drift · also caught by dim-01)."
+  },
+  "thresholds": {
+    "densityFloor": { "sectionPairGap": 24, "bodyTextGap": 12, "cardBoxGap": 16 },
+    "rhythmStrict": ["section-pair > section-pair", "card-box > card-box"]
+  },
+  "typeRoleMapping": {
+    ".section-pair__head": "heading",
+    ".section-pair__body": "body",
+    ".card-box__label": "label",
+    ".tag": "label"
+  },
+  "fileTypes": [".html"]
+}

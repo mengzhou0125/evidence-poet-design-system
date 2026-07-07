@@ -73,17 +73,22 @@ export function check(file, ctx) {
   }
 
   // Documented sub-scale exception (design.md §5): tight badge / chip / tag components may
-  // use 1–2px off-scale padding when the declaration line carries the spec-sanctioned marker
-  // `/* sub-scale: tight badge */`. Comments are stripped in `text`, so detect the marker on the
-  // matching ORIGINAL line (stripComments preserves newlines, so line indices align 1:1). This is
-  // narrow on purpose — only the exact documented marker exempts, no blanket off-scale allowance.
+  // use 1–2px off-scale padding when the spec-sanctioned marker `/* sub-scale: tight badge */`
+  // is present. Comments are stripped in `text`, so detect the marker on the matching ORIGINAL
+  // line (stripComments preserves newlines, so line indices align 1:1). Honored on the SAME line
+  // as the declaration OR the immediately preceding line — authors commonly put the marker on its
+  // own line just above the property (a real-world false-positive: the marker was on the
+  // line above, which the same-line-only check missed). Still narrow on purpose: only the exact
+  // documented marker exempts, and only the one declaration line it directly precedes — no blanket
+  // off-scale allowance across a block.
   const originalLines = file.original.split('\n');
   const SUBSCALE_MARKER_RE = /\/\*\s*sub-scale:\s*tight badge\s*\*\//i;
 
   const violations = [];
   const lines = text.split('\n');
   lines.forEach((line, i) => {
-    if (SUBSCALE_MARKER_RE.test(originalLines[i] || '')) return; // honor documented tight-badge exception
+    if (SUBSCALE_MARKER_RE.test(originalLines[i] || '') ||
+        SUBSCALE_MARKER_RE.test(originalLines[i - 1] || '')) return; // honor tight-badge exception (same or immediately-preceding line)
     let m;
     SPACING_RE.lastIndex = 0;
     while ((m = SPACING_RE.exec(line)) !== null) {

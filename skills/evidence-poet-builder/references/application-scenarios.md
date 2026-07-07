@@ -4,6 +4,15 @@ DNA1 is framework-agnostic. The *spec* (`spec.md`) defines the design language;
 this file defines **how the language applies** across four kinds of build. Each scenario
 points to a real reference implementation — copy its patterns rather than reinventing.
 
+<!-- ANTI-CLOBBER · Scenarios C and D are INTENTIONALLY thin stubs (since the 2026-06-09
+     3-repo split): C defers to the standalone `svg-diagram-skill`, D to `html-review-skill`,
+     which now own the full SVG spec and the review-HTML tag-profiles/extension-tokens
+     respectively. This workspace source is the CANONICAL copy and carries the stubs on
+     purpose — do NOT re-expand C/D back into full scenarios when syncing to/from the public
+     mirror (that regression happened once via a sync clobber · re-stubbed 2026-07-05). If the
+     public repo shows full C/D, propagate THIS stubbed canonical outward, not the reverse. -->
+
+
 ## How to use this file
 
 Match the three bootstrap questions to a scenario:
@@ -97,125 +106,23 @@ runs it, no npm install. Bind `0.0.0.0` for LAN access; a canonical JSON file ac
 
 ## Scenario C · SVG diagram
 
-**When**: vector content — architecture diagrams, flow charts, decision matrices,
-concept-framework figures, portfolio card covers.
+**When**: vector content — architecture diagrams, flow charts, decision matrices, concept-framework figures, portfolio card covers.
 
-**Reference implementation**: the `visual-asset-generator` skill (it already encodes DNA1
-for SVG). If you are generating a finished diagram, **use that skill directly**. Build
-SVG by hand only when the diagram is embedded in a larger build this skill is producing.
+**Stub · defers to `svg-diagram-skill`** (standalone · owns the TYPE A–F chart taxonomy, the Python-list generation method, and the full DNA1 SVG spec). For any finished diagram, **use that skill directly** — don't hand-build here. Build SVG inline only when it is embedded in a larger build *this* skill is already producing; then keep the non-negotiables: three fonts embedded in `<defs>` (Georgia / Arial / Courier New fallback for offline / PDF), every `<rect>` is `rx="0"`, §0 JSON colors used directly (SVG has no CSS custom properties in all renderers), no `<feDropShadow>` / `<linearGradient>` / decorative effects, solid `<polygon>` arrowheads (connectors 1.5px · dividers 1px), gold `#C8A84B` on only the 1–2 most important paths. Full guidance: `svg-diagram-skill/references/{svg-spec.md, chart-types.md, generation-method.md}`.
 
-**How DNA1 applies in SVG**:
-1. Embed the three fonts in `<defs><style>@import url(...)</style></defs>` (or fall back
-   to Georgia / Arial / Courier New for offline / PDF embedding).
-2. Every `<rect>` is `rx="0" ry="0"` — sharp corners, no exceptions.
-3. Colors are the §0 JSON values directly (SVG has no CSS custom properties in all renderers).
-4. No `<feDropShadow>`, no `<linearGradient>`, no decorative effects.
-5. Arrowheads = solid `<polygon>` triangles. Connector lines 1.5px; dividers 1px.
-6. Gold `#C8A84B` 3px solid line marks only the 1–2 most important paths — never decoration.
-
-**Reusable patterns**:
-- **Vertical spacing tokens** — a small fixed scale (tight / compact / section / major /
-  margin), referenced as named constants in generation code, never as magic numbers.
-- **Canvas sizing top-down** — compute the core content width first; canvas width is its
-  derivative; height accumulates from content. Never fix the canvas then bump it.
-- **`foreignObject` for any wrapping prose** — long text uses `<foreignObject>` + an HTML
-  `<div>` so it reflows; only short single-line labels use `<text>`.
+> Historical note: the old reference impl `visual-asset-generator` was **deleted 2026-06-10** (superseded by `svg-diagram-skill`); this stub is its successor pointer.
 
 ---
 
 ## Scenario D · Content-review HTML
 
-**When**: building an HTML surface to review a document — proposed text changes plus
-rationale annotations side-by-side, or AI-review flags against existing content.
+**When**: building an HTML surface to review a document — proposed text changes plus rationale annotations side-by-side, or AI-review flags against existing content.
 
-**How DNA1 applies to review HTML** (build directly from this scenario · no separate framework to copy):
-1. Copy the DNA1 base tokens verbatim (same as Scenario B · from `spec.md` §0).
-2. Add review-semantic **extension** tokens — namespaced `--review-*` / `--audit-*` — for status, layer, and severity (definitions below). Every extension token carries an inline WCAG rationale (per spec §"Extension governance" rule 2).
-3. Import the three fonts — and **build CJK-safe stacks**: review-HTML status/layer tags are often Chinese (`改` / `删` / `D 精简`) and render in *mono*, so the **mono and serif stacks MUST include a CJK font first** among fallbacks (`'DM Mono', 'Microsoft YaHei', monospace` · `'Playfair Display', 'Microsoft YaHei', serif`) or Windows renders Traditional glyphs (per `spec.md` §3 "CJK / i18n font fallback"). Tip: define `--font-sans/serif/mono` once in `:root` and reference `var(--font-*)` everywhere, so the stack can't drift per-rule. Sharp corners everywhere (`border-radius: 0` global reset).
-4. Layout — **pick ONE of two archetypes** (both share a left ToC + per-section feedback; they differ only in *where the annotations sit*):
-   - **(A) right-rail** — main content column + a sticky annotation rail on the right; per-section feedback at the bottom of the rail. Best when annotations read beside the content (case study · doc revision · narrative).
-   - **(B) ToC + stacked** — a left sticky table-of-contents nav + single-column sections; each section's annotations stack *under* its content, with feedback at the bottom of the stack. Best for long technical / spec / architecture reviews (10+ sections · jump-nav matters).
-   Separate sections with 1px horizontal dividers.
+**Stub · defers to `html-review-skill`** (standalone · owns the two layout archetypes [right-rail · ToC+stacked], the two tag profiles [editorial 3×4 · technical 3×3×3], the namespaced `--review-*` / `--audit-*` extension-token definitions, the feedback collector, and DIFF mode). For any review HTML, **use that skill directly**. Build inline only when it is embedded in a larger build *this* skill is already producing; then keep the essentials: copy base tokens from `spec.md` §0, add namespaced `--review-*` / `--audit-*` extension tokens each with an inline `/* WCAG <ratio>:1 ... */` comment (spec §"Extension governance" rule 2), build **CJK-safe font stacks** — the mono + serif stacks MUST carry a CJK font first (`'DM Mono', 'Microsoft YaHei', monospace`) or Windows renders Traditional glyphs (`spec.md` §3), and `border-radius: 0` global.
 
-**Tag system (BP rule · 2 profiles · pick per use case)**:
+Full tag-profile schemas (editorial + technical), the copy-into-`:root` extension-token block, the section-pair / audit-box / before-after / ToC / per-section-feedback component patterns, and DIFF mode all live in **`html-review-skill/references/{tag-profiles.md, components.css, feedback-collector.js, diff-mode.md}`**.
 
-> **Two coexisting tag schemas** — pick per use case (editorial vs technical).
-
-### Profile A · Editorial review (for case study · doc revision · narrative content)
-
-Schema: **3 status × 4 layer = 12 combos**, plus 3-level audit-box severity gradient (informational only).
-
-| Status (action type · 3 values) | Layer (design dimension · 4 values) |
-|---|---|
-| **改** · modified (gold-dark #7E6720) | **A 故事** · capability signal / story arc (cool blue #3D5C73) |
-| **原** · kept original (gray #717171) | **B 分层** · body ↔ caption layering (olive #5E5840) |
-| **删** · deleted (terracotta #A85F4D) | **C 去拉踩** · remove ego / soften absolutes (plum #6A4A6E) |
-| | **D 精简** · density / dedup / shorten (slate #4A4A45) |
-
-Audit-box severity gradient (separate · informational): `--audit-severity-high/mid/low`.
-
-CSS classes: `.change-tag` (status) · `.r-tag.layer-a/b/c/d` (layer) · `.audit-box .sev-high/mid/low` (audit-box severity).
-
-### Profile B · Technical review (for code · spec · architecture · cross-layer audit)
-
-Schema: **3 axes × 3 variants = 9 distinct colors**. Each finding carries up to 3 tags (one per axis).
-
-| Status (warm) | Layer (cool/earth) | Severity (grayscale) |
-|---|---|---|
-| **REV** revise (blue-gray #527590) | **A** spec-internal (forest green #5A7A5A) | **P0** must (ink #1A1A18) |
-| **KEPT** approve (gold-dark #7E6720) | **B** cross-layer (plum #7C5A7A) | **P1** should (mid #555555) |
-| **DEL** remove (terracotta #A85F4D) | **C** style/wording (slate teal #4E7A85) | **P2** note (light #717171) |
-
-CSS classes: `.tech-tag.tech-status-rev/kept/del` · `.tech-tag.tech-layer-a/b/c` · `.tech-tag.tech-sev-p0/p1/p2`.
-
-### Rules when building a review HTML (both profiles)
-
-- Pick profile first (editorial vs technical) before laying out tags
-- Each color extension token gets an inline `/* WCAG <ratio>:1 <text-color-on-this> */` comment
-- Profile A: warm-status × cool-layer · severity is separate audit-box gradient
-- Profile B: warm-status · cool/earth-layer · achromatic-severity (asymmetry is the visual signal that severity is orthogonal to chromatic axes)
-
-**Why this is a BP rule not a spec rule** (architectural note): this 2-profile tag system is an **extension** (per `design.md` §"Extension governance") · not part of the canonical spec §0. It lives here in builder Scenario D (apply-time guidance) · not in `design.md` (spec authority). Per §"Extension governance" rule 5, extensions promote to spec only when multiple consumers converge. **The evidence-poet-auditor does NOT check tag orthogonality** (would be auditor-enforcing-an-extension-instead-of-spec). Builder enforces at create-time; visual review catches post-edit drift.
-
-### Extension token definitions (copy into your review HTML's `<style>` `:root`)
-
-Canonical review-semantic extensions · namespaced + WCAG-commented per §"Extension governance". Base DNA1 tokens come from `spec.md` §0 (copy verbatim, same as Scenario B); the block below is the review-specific *addition*.
-
-```css
-:root {
-  /* ── Profile A · editorial · Status (改/原/删) ── */
-  --review-modified-fill: #7E6720;  /* gold-dark · WCAG 5.5:1 white-on · = §0 promotedExtensions.accentDark */
-  --review-kept-fill:     #717171;  /* neutral gray · WCAG 4.6:1 white-on */
-  --review-deleted-fill:  #A85F4D;  /* terracotta · WCAG 4.8:1 white-on · no DNA1 base equivalent */
-  --review-modified-light: #F8F2E0; /* outlined-card tint · WCAG 11.8:1 ink-on */
-  --review-deleted-light:  #F3EAE7; /* outlined-card tint · WCAG 11.4:1 ink-on */
-
-  /* ── Profile A · editorial · Layer (A 故事 / B 分层 / C 去拉踩 / D 精简) ── */
-  --review-layer-a: #3D5C73;  --review-layer-b: #5E5840;  --review-layer-c: #6A4A6E;  --review-layer-d: #4A4A45;
-
-  /* ── audit-box severity gradient (informational · NOT a tag axis) ── */
-  --audit-severity-high: var(--review-deleted-fill);  --audit-severity-mid: #7E6720;  --audit-severity-low: #5A8A5A;
-
-  /* ── Profile B · technical · 3 axes × 3 variants (9 colors) ── */
-  --review-tech-status-rev:  #527590;  --review-tech-status-kept: #7E6720;  --review-tech-status-del:  #A85F4D;
-  --review-tech-layer-a:     #5A7A5A;  --review-tech-layer-b:     #7C5A7A;  --review-tech-layer-c:     #4E7A85;
-  --review-tech-severity-p0: #1A1A18;  --review-tech-severity-p1: #555555;  --review-tech-severity-p2: #717171;
-}
-```
-
-All tags: filled mono-uppercase chips · `font-size` ~10px · `letter-spacing: 0.06em` · white text on the fills above · `border-radius: 0`.
-
-**Reusable component patterns** (build in prose · same depth as Scenarios A/B):
-- **Section-pair grid** — `display: grid` · main content (left, flexible) + sticky review notes (right, ~480px) · 1px warm-border divider between pairs
-- **Status / layer / severity tags** — filled mono-uppercase chips per CSS classes above
-- **Audit-box** — informational panel · cool-blue-gray left accent (`border-left: 3px solid var(--color-cta-muted)`) · distinct from status colors (information ≠ change)
-- **Before/after compare blocks** — coral-tint "before" (`--review-deleted-light`) · gold-tint "after" (`--review-modified-light`) · gold = proposed change
-- **Left ToC nav** — sticky left column (`~240px`) of `<a href="#section-id">` anchors + `html { scroll-behavior: smooth }`; collapses to a top band on narrow screens. Both archetypes use it.
-- **Per-section feedback + copy-all** — for reviews where the user rates each section: give each section a feedback block (a label + `✓ approve` / `⚠ revise` / `✗ reject` checkboxes + a notes `<textarea>`), at the bottom of that section's annotations. Add ONE fixed **"📋 Copy all feedback"** button — a small self-contained `<script>` IIFE that walks every feedback block, serializes section-label + checked ratings + notes + a summary tally, and writes the digest to the clipboard, so the user pastes one block into chat and the AI continues revising. **The page saves no data** (ephemeral DOM · serialize-on-demand · no localStorage / backend).
-- **Clean state** — dashed low-contrast box "section reviewed · no flags" so reviewed-fine reads differently from unreviewed
-- **DIFF mode** — re-reviewing an edited doc: section-level change tags (NEW / EDITED / RESTRUCTURED / UNCHANGED) · changed sections get gold tint + changebar · unchanged collapse to one line
-
-**Working examples to model on** (illustrations · not required dependencies): any Pass A review HTML in your case-study `_review/` folders (Profile A) · any multi-layer architecture review HTML (Profile B). The pattern is fully specified above.
+> Architectural note: the 2-profile tag system is an **extension** (spec §"Extension governance"), not canonical spec §0 — so the auditor does **not** check tag orthogonality (that would be auditor-enforcing-an-extension). Enforcement is build-time (this scenario → html-review-skill); visual review catches post-edit drift.
 
 ---
 

@@ -52,6 +52,7 @@ import { reportTerminal, reportJSON, reportHTML, reportSummary, reportFix } from
 import { runFixes } from './lib/fix.mjs';
 
 // All dimension modules
+import * as dim00 from './lib/dimensions/00-structural-integrity.mjs';
 import * as dim01 from './lib/dimensions/01-hex-canonical.mjs';
 import * as dim03a from './lib/dimensions/03a-spacing-scale.mjs';
 import * as dim03b from './lib/dimensions/03b-pair-rhythm.mjs';
@@ -66,7 +67,7 @@ import * as dim11 from './lib/dimensions/11-wcag-contrast.mjs';
 import * as dim12 from './lib/dimensions/12-extension-gov.mjs';
 import { defineProfile } from './lib/define-profile.mjs';
 
-const ALL_DIMENSIONS = [dim01, dim03a, dim03b, dim04, dim05, dim06, dim07, dim08, dim09, dim10, dim11, dim12];
+const ALL_DIMENSIONS = [dim00, dim01, dim03a, dim03b, dim04, dim05, dim06, dim07, dim08, dim09, dim10, dim11, dim12];
 
 // ---------- arg parse ----------
 const args = process.argv.slice(2);
